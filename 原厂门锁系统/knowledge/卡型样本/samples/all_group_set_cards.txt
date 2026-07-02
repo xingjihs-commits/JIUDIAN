@@ -1,0 +1,4 @@
+# 组号设置卡 (GroupSetCard) 真实样本
+#
+# 来自 CardLock260527.MDB
+C92B20B7F60C0101005715DAF015DAF0

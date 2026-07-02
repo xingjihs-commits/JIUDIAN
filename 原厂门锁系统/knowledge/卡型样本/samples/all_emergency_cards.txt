@@ -1,0 +1,4 @@
+# 应急卡 (EmergencyCard) 真实样本
+#
+# ⚠️ 本系统无应急卡样本！这家酒店从未发过应急卡。
+# 需要用原版 CardLock.exe → 发一张应急卡 → 记录 payload hex。

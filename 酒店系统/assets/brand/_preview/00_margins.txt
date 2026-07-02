@@ -1,0 +1,5 @@
+canvas=944x1123
+content_bbox=(73, 132, 891, 1037)
+margins_px L=73 R=53 T=132 B=86
+content_size=818x905
+trim_pad_ratio=0.025

@@ -1,0 +1,15 @@
+{
+  "brand": "必达 IB",
+  "adapter_id": "bida_ib",
+  "detect": {"files": ["btIB232.dll", "BEDEIB32.dll"], "optional_files": []},
+  "payload_size": 16,
+  "layout": {
+    "site_offset": 4, "site_len": 2,
+    "lock_no_offset": 6, "lock_no_len": 2,
+    "salt_offset": 8, "type_offset": 9,
+    "body_offset": 10, "body_len": 4,
+    "chk_offset": 14, "chk_len": 2
+  },
+  "dll": {"path": "btIB232.dll"},
+  "supported": false
+}

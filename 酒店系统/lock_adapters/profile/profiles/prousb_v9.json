@@ -1,0 +1,138 @@
+{
+    "brand": "proUSB V9",
+    "adapter_id": "prousb_v9",
+    "version_hint": "V9-20171130",
+    "magic": "C92B20B7",
+    "payload_size": 16,
+    "description": "proUSB 系列门锁系统（Walton V9 公版），基于逆向工程。",
+    "detect": {
+        "files": ["V9RFL.dll", "d12.dll"],
+        "optional_files": ["d12c.dll", "Mwic_32.dll", "System.ini", "CardLock.mdb"],
+        "ini_sections": {
+            "SYSTEM": ["dlsCoID", "HotelID", "PCID", "SN", "LD", "LDO"]
+        }
+    },
+    "layout": {
+        "site_offset": 4,
+        "site_len": 2,
+        "lock_no_offset": 6,
+        "lock_no_len": 2,
+        "salt_offset": 8,
+        "type_offset": 9,
+        "body_offset": 10,
+        "body_len": 4,
+        "chk_offset": 14,
+        "chk_len": 2
+    },
+    "card_types": {
+        "auth": {
+            "type_byte_high": 0,
+            "body_len": 4,
+            "auth_token_repeat": true,
+            "description": "授权卡 — LockNo 固定 809C，最后 6 字节 = 3字节 Token × 2"
+        },
+        "ini": {
+            "type_byte_high": 1,
+            "body_len": 4
+        },
+        "record": {
+            "type_byte_high": 8,
+            "body_len": 4
+        },
+        "guest": {
+            "type_byte_high": 6,
+            "body_len": 4,
+            "checksum_override": "sum14_zero_byte15",
+            "description": "客人卡 — 建议用 DLL GuestCard 函数发卡，body 含 BCD 时间戳"
+        },
+        "master": {
+            "type_byte_high": 11,
+            "body_len": 4,
+            "signature_byte15": "FB",
+            "description": "总卡 — byte[15] = 0xFB 恒定"
+        },
+        "building": {
+            "type_byte_high": 12,
+            "body_len": 4,
+            "signature_byte15": "FB",
+            "description": "楼栋卡 — byte[15] = 0xFB 恒定"
+        },
+        "floor": {
+            "type_byte_high": 13,
+            "body_len": 4,
+            "signature_byte15": "FB",
+            "description": "楼层卡 — byte[15] = 0xFB 恒定"
+        },
+        "emergency": {
+            "type_byte_high": 10,
+            "body_len": 4,
+            "description": "应急卡 — site 码置 emergency_bit"
+        },
+        "group": {
+            "type_byte_high": 8,
+            "body_len": 4,
+            "description": "组控卡"
+        }
+    },
+    "checksum": {
+        "algorithm": "byte15_fb",
+        "overrides": {
+            "guest": "sum14_zero_byte15"
+        },
+        "notes": "系统卡: byte[15]=0xFB; 客人卡调用 DLL 实现，回退用 sum14 + byte15=00"
+    },
+    "lock_no": {
+        "field": "bytes_2_at_offset_6",
+        "encoding": "hex_be",
+        "solid_format": "8_hex_chars",
+        "description": "payload[6..7] = 2 字节锁号; Solid 用 8 字符 '80RRFFBB' 格式"
+    },
+    "date_encoding": "legacy_prousb",
+    "begin_time_encoding": "prousb",
+    "site_code": {
+        "field": "bytes_2_at_offset_4",
+        "mask": "0x3FFF",
+        "emergency_bit": "0x4000"
+    },
+    "salt": {
+        "offset": 8,
+        "default": "00",
+        "note": "原厂软件用 02-11 增量，Solid DLL 统一用 00"
+    },
+    "type_byte": {
+        "offset": 9,
+        "format": "high_nibble_card_type | low_nibble_sequence"
+    },
+    "body": {
+        "offset": 10,
+        "length": 4,
+        "description": "卡型相关数据: 系统卡=[begin_time, extra, card_no]; 客人卡=DLL 内部格式"
+    },
+    "checksum_bytes": {
+        "offset": 14,
+        "length": 2,
+        "description": "byte[14]=校验和/随机, byte[15]=签名(系统卡: FB, 客人卡: 00)"
+    },
+    "dll": {
+        "path": "V9RFL.dll",
+        "init": "initializeUSB",
+        "init_params": [1],
+        "read": "ReadCard",
+        "write": "WriteCard",
+        "direct_write": "DirectWriteUSB",
+        "direct_read": "DirectReadUSB",
+        "init_card": "IniCard",
+        "guest_card_fn": "GuestCard",
+        "keepalive_fn": "sub_00694134",
+        "bridge_required": true,
+        "bridge_compatible": true
+    },
+    "patch": {
+        "error_marker": "E0074",
+        "strategy": "v12_precision_patch",
+        "patch_size_bytes": 6,
+        "description": "精确补丁只改 E0074 判决为无条件跳转，保留读卡器握手"
+    },
+    "sample_count": 3000,
+    "knowledge_base": "综合成果.md §三 + §八"
+}

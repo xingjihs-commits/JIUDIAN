@@ -1,0 +1,553 @@
+Using DLL: D:\AI\新02智能门锁系统\proRFL.dll (286767 bytes)
+ImageBase=0x10000000, ImageSize=290816
+.text: VA=0x10001000..0x1003D000 (245760 bytes)
+
+======================================================================
+GuestCard export entry VA=0x1000115E
+Export stub is 'jmp 0x10008D60' -> following to real body
+GuestCard real function body VA=0x10008D60 (RVA=0x00008D60)
+Function boundary detected at 0x1000915F (ret)
+GuestCard function: 340 instructions
+
+======================================================================
+FULL DISASSEMBLY of GuestCard @ VA=0x10008D60
+======================================================================
+
+  0x10008D60:  55                             push     ebp                                           
+  0x10008D61:  8bec                           mov      ebp, esp                                      
+  0x10008D63:  81ecc0000000                   sub      esp, 0xc0                                     
+  0x10008D69:  53                             push     ebx                                           
+  0x10008D6A:  56                             push     esi                                           
+  0x10008D6B:  57                             push     edi                                           
+  0x10008D6C:  8dbd40ffffff                   lea      edi, [ebp - 0xc0]                             
+  0x10008D72:  b930000000                     mov      ecx, 0x30                                     
+  0x10008D77:  b8cccccccc                     mov      eax, 0xcccccccc                               
+  0x10008D7C:  f3ab                           rep stosd dword ptr es:[edi], eax                       
+  0x10008D7E:  8b450c                         mov      eax, dword ptr [ebp + 0xc]                    
+  0x10008D81:  99                             cdq                                                    
+  0x10008D82:  81e2ffff0000                   and      edx, 0xffff                                    <BIT>
+  0x10008D88:  03c2                           add      eax, edx                                      
+  0x10008D8A:  c1f810                         sar      eax, 0x10                                     
+  0x10008D8D:  884584                         mov      byte ptr [ebp - 0x7c], al                     
+  0x10008D90:  8b450c                         mov      eax, dword ptr [ebp + 0xc]                    
+  0x10008D93:  25ffff0080                     and      eax, 0x8000ffff                                <BIT>
+  0x10008D98:  7907                           jns      0x10008da1                                     [BR]
+  0x10008D9A:  48                             dec      eax                                           
+  0x10008D9B:  0d0000ffff                     or       eax, 0xffff0000                                <BIT>
+  0x10008DA0:  40                             inc      eax                                           
+  0x10008DA1:  894580                         mov      dword ptr [ebp - 0x80], eax                   
+  0x10008DA4:  8b4d20                         mov      ecx, dword ptr [ebp + 0x20]                   
+  0x10008DA7:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008DA9:  8a11                           mov      dl, byte ptr [ecx]                            
+  0x10008DAB:  83ea30                         sub      edx, 0x30                                     
+  0x10008DAE:  6bd20a                         imul     edx, edx, 0xa                                 
+  0x10008DB1:  8b4520                         mov      eax, dword ptr [ebp + 0x20]                   
+  0x10008DB4:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008DB6:  8a4801                         mov      cl, byte ptr [eax + 1]                        
+  0x10008DB9:  8d540ad0                       lea      edx, [edx + ecx - 0x30]                       
+  0x10008DBD:  8855bc                         mov      byte ptr [ebp - 0x44], dl                     
+  0x10008DC0:  8b4520                         mov      eax, dword ptr [ebp + 0x20]                   
+  0x10008DC3:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008DC5:  8a4802                         mov      cl, byte ptr [eax + 2]                        
+  0x10008DC8:  83e930                         sub      ecx, 0x30                                     
+  0x10008DCB:  6bc90a                         imul     ecx, ecx, 0xa                                 
+  0x10008DCE:  8b5520                         mov      edx, dword ptr [ebp + 0x20]                   
+  0x10008DD1:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008DD3:  8a4203                         mov      al, byte ptr [edx + 3]                        
+  0x10008DD6:  8d4c01d0                       lea      ecx, [ecx + eax - 0x30]                       
+  0x10008DDA:  884db8                         mov      byte ptr [ebp - 0x48], cl                     
+  0x10008DDD:  8b5520                         mov      edx, dword ptr [ebp + 0x20]                   
+  0x10008DE0:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008DE2:  8a4204                         mov      al, byte ptr [edx + 4]                        
+  0x10008DE5:  83e830                         sub      eax, 0x30                                     
+  0x10008DE8:  6bc00a                         imul     eax, eax, 0xa                                 
+  0x10008DEB:  8b4d20                         mov      ecx, dword ptr [ebp + 0x20]                   
+  0x10008DEE:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008DF0:  8a5105                         mov      dl, byte ptr [ecx + 5]                        
+  0x10008DF3:  8d4410d0                       lea      eax, [eax + edx - 0x30]                       
+  0x10008DF7:  8845b4                         mov      byte ptr [ebp - 0x4c], al                     
+  0x10008DFA:  8b4d20                         mov      ecx, dword ptr [ebp + 0x20]                   
+  0x10008DFD:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008DFF:  8a5106                         mov      dl, byte ptr [ecx + 6]                        
+  0x10008E02:  83ea30                         sub      edx, 0x30                                     
+  0x10008E05:  6bd20a                         imul     edx, edx, 0xa                                 
+  0x10008E08:  8b4520                         mov      eax, dword ptr [ebp + 0x20]                   
+  0x10008E0B:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008E0D:  8a4807                         mov      cl, byte ptr [eax + 7]                        
+  0x10008E10:  8d540ad0                       lea      edx, [edx + ecx - 0x30]                       
+  0x10008E14:  8855b0                         mov      byte ptr [ebp - 0x50], dl                     
+  0x10008E17:  8b4520                         mov      eax, dword ptr [ebp + 0x20]                   
+  0x10008E1A:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008E1C:  8a4808                         mov      cl, byte ptr [eax + 8]                        
+  0x10008E1F:  83e930                         sub      ecx, 0x30                                     
+  0x10008E22:  6bc90a                         imul     ecx, ecx, 0xa                                 
+  0x10008E25:  8b5520                         mov      edx, dword ptr [ebp + 0x20]                   
+  0x10008E28:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008E2A:  8a4209                         mov      al, byte ptr [edx + 9]                        
+  0x10008E2D:  8d4c01d0                       lea      ecx, [ecx + eax - 0x30]                       
+  0x10008E31:  884dac                         mov      byte ptr [ebp - 0x54], cl                     
+  0x10008E34:  8b5524                         mov      edx, dword ptr [ebp + 0x24]                   
+  0x10008E37:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008E39:  8a02                           mov      al, byte ptr [edx]                            
+  0x10008E3B:  83e830                         sub      eax, 0x30                                     
+  0x10008E3E:  6bc00a                         imul     eax, eax, 0xa                                 
+  0x10008E41:  8b4d24                         mov      ecx, dword ptr [ebp + 0x24]                   
+  0x10008E44:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008E46:  8a5101                         mov      dl, byte ptr [ecx + 1]                        
+  0x10008E49:  8d4410d0                       lea      eax, [eax + edx - 0x30]                       
+  0x10008E4D:  8845a8                         mov      byte ptr [ebp - 0x58], al                     
+  0x10008E50:  8b4d24                         mov      ecx, dword ptr [ebp + 0x24]                   
+  0x10008E53:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008E55:  8a5102                         mov      dl, byte ptr [ecx + 2]                        
+  0x10008E58:  83ea30                         sub      edx, 0x30                                     
+  0x10008E5B:  6bd20a                         imul     edx, edx, 0xa                                 
+  0x10008E5E:  8b4524                         mov      eax, dword ptr [ebp + 0x24]                   
+  0x10008E61:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008E63:  8a4803                         mov      cl, byte ptr [eax + 3]                        
+  0x10008E66:  8d540ad0                       lea      edx, [edx + ecx - 0x30]                       
+  0x10008E6A:  8855a4                         mov      byte ptr [ebp - 0x5c], dl                     
+  0x10008E6D:  8b4524                         mov      eax, dword ptr [ebp + 0x24]                   
+  0x10008E70:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008E72:  8a4804                         mov      cl, byte ptr [eax + 4]                        
+  0x10008E75:  83e930                         sub      ecx, 0x30                                     
+  0x10008E78:  6bc90a                         imul     ecx, ecx, 0xa                                 
+  0x10008E7B:  8b5524                         mov      edx, dword ptr [ebp + 0x24]                   
+  0x10008E7E:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008E80:  8a4205                         mov      al, byte ptr [edx + 5]                        
+  0x10008E83:  8d4c01d0                       lea      ecx, [ecx + eax - 0x30]                       
+  0x10008E87:  884da0                         mov      byte ptr [ebp - 0x60], cl                     
+  0x10008E8A:  8b5524                         mov      edx, dword ptr [ebp + 0x24]                   
+  0x10008E8D:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008E8F:  8a4206                         mov      al, byte ptr [edx + 6]                        
+  0x10008E92:  83e830                         sub      eax, 0x30                                     
+  0x10008E95:  6bc00a                         imul     eax, eax, 0xa                                 
+  0x10008E98:  8b4d24                         mov      ecx, dword ptr [ebp + 0x24]                   
+  0x10008E9B:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008E9D:  8a5107                         mov      dl, byte ptr [ecx + 7]                        
+  0x10008EA0:  8d4410d0                       lea      eax, [eax + edx - 0x30]                       
+  0x10008EA4:  88459c                         mov      byte ptr [ebp - 0x64], al                     
+  0x10008EA7:  8b4d24                         mov      ecx, dword ptr [ebp + 0x24]                   
+  0x10008EAA:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008EAC:  8a5108                         mov      dl, byte ptr [ecx + 8]                        
+  0x10008EAF:  83ea30                         sub      edx, 0x30                                     
+  0x10008EB2:  6bd20a                         imul     edx, edx, 0xa                                 
+  0x10008EB5:  8b4524                         mov      eax, dword ptr [ebp + 0x24]                   
+  0x10008EB8:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008EBA:  8a4809                         mov      cl, byte ptr [eax + 9]                        
+  0x10008EBD:  8d540ad0                       lea      edx, [edx + ecx - 0x30]                       
+  0x10008EC1:  885598                         mov      byte ptr [ebp - 0x68], dl                     
+  0x10008EC4:  8b4528                         mov      eax, dword ptr [ebp + 0x28]                   
+  0x10008EC7:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008EC9:  8a08                           mov      cl, byte ptr [eax]                            
+  0x10008ECB:  83e930                         sub      ecx, 0x30                                     
+  0x10008ECE:  6bc90a                         imul     ecx, ecx, 0xa                                 
+  0x10008ED1:  8b5528                         mov      edx, dword ptr [ebp + 0x28]                   
+  0x10008ED4:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008ED6:  8a4201                         mov      al, byte ptr [edx + 1]                        
+  0x10008ED9:  8d4c01d0                       lea      ecx, [ecx + eax - 0x30]                       
+  0x10008EDD:  884d94                         mov      byte ptr [ebp - 0x6c], cl                     
+  0x10008EE0:  8b5528                         mov      edx, dword ptr [ebp + 0x28]                   
+  0x10008EE3:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008EE5:  8a4202                         mov      al, byte ptr [edx + 2]                        
+  0x10008EE8:  83e830                         sub      eax, 0x30                                     
+  0x10008EEB:  6bc00a                         imul     eax, eax, 0xa                                 
+  0x10008EEE:  8b4d28                         mov      ecx, dword ptr [ebp + 0x28]                   
+  0x10008EF1:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008EF3:  8a5103                         mov      dl, byte ptr [ecx + 3]                        
+  0x10008EF6:  8d4410d0                       lea      eax, [eax + edx - 0x30]                       
+  0x10008EFA:  884590                         mov      byte ptr [ebp - 0x70], al                     
+  0x10008EFD:  8b4d28                         mov      ecx, dword ptr [ebp + 0x28]                   
+  0x10008F00:  33d2                           xor      edx, edx                                       <BIT>
+  0x10008F02:  8a5104                         mov      dl, byte ptr [ecx + 4]                        
+  0x10008F05:  83ea30                         sub      edx, 0x30                                     
+  0x10008F08:  6bd20a                         imul     edx, edx, 0xa                                 
+  0x10008F0B:  8b4528                         mov      eax, dword ptr [ebp + 0x28]                   
+  0x10008F0E:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008F10:  8a4805                         mov      cl, byte ptr [eax + 5]                        
+  0x10008F13:  8d540ad0                       lea      edx, [edx + ecx - 0x30]                       
+  0x10008F17:  88558c                         mov      byte ptr [ebp - 0x74], dl                     
+  0x10008F1A:  8b4528                         mov      eax, dword ptr [ebp + 0x28]                   
+  0x10008F1D:  33c9                           xor      ecx, ecx                                       <BIT>
+  0x10008F1F:  8a4806                         mov      cl, byte ptr [eax + 6]                        
+  0x10008F22:  83e930                         sub      ecx, 0x30                                     
+  0x10008F25:  6bc90a                         imul     ecx, ecx, 0xa                                 
+  0x10008F28:  8b5528                         mov      edx, dword ptr [ebp + 0x28]                   
+  0x10008F2B:  33c0                           xor      eax, eax                                       <BIT>
+  0x10008F2D:  8a4207                         mov      al, byte ptr [edx + 7]                        
+  0x10008F30:  8d4c01d0                       lea      ecx, [ecx + eax - 0x30]                       
+  0x10008F34:  884d88                         mov      byte ptr [ebp - 0x78], cl                     
+  0x10008F37:  8a55bc                         mov      dl, byte ptr [ebp - 0x44]                     
+  0x10008F3A:  80ea09                         sub      dl, 9                                         
+  0x10008F3D:  8855bc                         mov      byte ptr [ebp - 0x44], dl                     
+  0x10008F40:  8b45bc                         mov      eax, dword ptr [ebp - 0x44]                   
+  0x10008F43:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x10008F48:  250f000080                     and      eax, 0x8000000f                                <BIT>
+  0x10008F4D:  7905                           jns      0x10008f54                                     [BR]
+  0x10008F4F:  48                             dec      eax                                           
+  0x10008F50:  83c8f0                         or       eax, 0xfffffff0                                <BIT>
+  0x10008F53:  40                             inc      eax                                           
+  0x10008F54:  8845bc                         mov      byte ptr [ebp - 0x44], al                     
+  0x10008F57:  8a4da8                         mov      cl, byte ptr [ebp - 0x58]                     
+  0x10008F5A:  80e909                         sub      cl, 9                                         
+  0x10008F5D:  884da8                         mov      byte ptr [ebp - 0x58], cl                     
+  0x10008F60:  8b55a8                         mov      edx, dword ptr [ebp - 0x58]                   
+  0x10008F63:  81e2ff000000                   and      edx, 0xff                                      <BIT>
+  0x10008F69:  81e20f000080                   and      edx, 0x8000000f                                <BIT>
+  0x10008F6F:  7905                           jns      0x10008f76                                     [BR]
+  0x10008F71:  4a                             dec      edx                                           
+  0x10008F72:  83caf0                         or       edx, 0xfffffff0                                <BIT>
+  0x10008F75:  42                             inc      edx                                           
+  0x10008F76:  8855a8                         mov      byte ptr [ebp - 0x58], dl                     
+  0x10008F79:  8b4580                         mov      eax, dword ptr [ebp - 0x80]                   
+  0x10008F7C:  25ff3f0080                     and      eax, 0x80003fff                                <BIT>
+  0x10008F81:  7907                           jns      0x10008f8a                                     [BR]
+  0x10008F83:  48                             dec      eax                                           
+  0x10008F84:  0d00c0ffff                     or       eax, 0xffffc000                                <BIT>
+  0x10008F89:  40                             inc      eax                                           
+  0x10008F8A:  894580                         mov      dword ptr [ebp - 0x80], eax                   
+  0x10008F8D:  8b4d10                         mov      ecx, dword ptr [ebp + 0x10]                   
+  0x10008F90:  81e1ff000000                   and      ecx, 0xff                                      <BIT>
+  0x10008F96:  81e10f000080                   and      ecx, 0x8000000f                                <BIT>
+  0x10008F9C:  7905                           jns      0x10008fa3                                     [BR]
+  0x10008F9E:  49                             dec      ecx                                           
+  0x10008F9F:  83c9f0                         or       ecx, 0xfffffff0                                <BIT>
+  0x10008FA2:  41                             inc      ecx                                           
+  0x10008FA3:  884d10                         mov      byte ptr [ebp + 0x10], cl                     
+  0x10008FA6:  8b5594                         mov      edx, dword ptr [ebp - 0x6c]                   
+  0x10008FA9:  81e2ff000000                   and      edx, 0xff                                      <BIT>
+  0x10008FAF:  81e20f000080                   and      edx, 0x8000000f                                <BIT>
+  0x10008FB5:  7905                           jns      0x10008fbc                                     [BR]
+  0x10008FB7:  4a                             dec      edx                                           
+  0x10008FB8:  83caf0                         or       edx, 0xfffffff0                                <BIT>
+  0x10008FBB:  42                             inc      edx                                           
+  0x10008FBC:  885594                         mov      byte ptr [ebp - 0x6c], dl                     
+  0x10008FBF:  8b451c                         mov      eax, dword ptr [ebp + 0x1c]                   
+  0x10008FC2:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x10008FC7:  250f000080                     and      eax, 0x8000000f                                <BIT>
+  0x10008FCC:  7905                           jns      0x10008fd3                                     [BR]
+  0x10008FCE:  48                             dec      eax                                           
+  0x10008FCF:  83c8f0                         or       eax, 0xfffffff0                                <BIT>
+  0x10008FD2:  40                             inc      eax                                           
+  0x10008FD3:  88451c                         mov      byte ptr [ebp + 0x1c], al                     
+  0x10008FD6:  c645c0c9                       mov      byte ptr [ebp - 0x40], 0xc9                   
+  0x10008FDA:  8a4d84                         mov      cl, byte ptr [ebp - 0x7c]                     
+  0x10008FDD:  884dc1                         mov      byte ptr [ebp - 0x3f], cl                     
+  0x10008FE0:  8b4580                         mov      eax, dword ptr [ebp - 0x80]                   
+  0x10008FE3:  99                             cdq                                                    
+  0x10008FE4:  81e2ff000000                   and      edx, 0xff                                      <BIT>
+  0x10008FEA:  03c2                           add      eax, edx                                      
+  0x10008FEC:  c1f808                         sar      eax, 8                                        
+  0x10008FEF:  8845c2                         mov      byte ptr [ebp - 0x3e], al                     
+  0x10008FF2:  8b5580                         mov      edx, dword ptr [ebp - 0x80]                   
+  0x10008FF5:  81e2ff000080                   and      edx, 0x800000ff                                <BIT>
+  0x10008FFB:  7908                           jns      0x10009005                                     [BR]
+  0x10008FFD:  4a                             dec      edx                                           
+  0x10008FFE:  81ca00ffffff                   or       edx, 0xffffff00                                <BIT>
+  0x10009004:  42                             inc      edx                                           
+  0x10009005:  8855c3                         mov      byte ptr [ebp - 0x3d], dl                     
+  0x10009008:  8a4588                         mov      al, byte ptr [ebp - 0x78]                     
+  0x1000900B:  8845c4                         mov      byte ptr [ebp - 0x3c], al                     
+  0x1000900E:  8b4d18                         mov      ecx, dword ptr [ebp + 0x18]                   
+  0x10009011:  81e1ff000000                   and      ecx, 0xff                                      <BIT>
+  0x10009017:  85c9                           test     ecx, ecx                                      
+  0x10009019:  7409                           je       0x10009024                                     [BR]
+  0x1000901B:  8a55c4                         mov      dl, byte ptr [ebp - 0x3c]                     
+  0x1000901E:  80c280                         add      dl, 0x80                                      
+  0x10009021:  8855c4                         mov      byte ptr [ebp - 0x3c], dl                     
+  0x10009024:  8b458c                         mov      eax, dword ptr [ebp - 0x74]                   
+  0x10009027:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x1000902C:  0580000000                     add      eax, 0x80                                     
+  0x10009031:  8845c5                         mov      byte ptr [ebp - 0x3b], al                     
+  0x10009034:  8b4d90                         mov      ecx, dword ptr [ebp - 0x70]                   
+  0x10009037:  81e1ff000000                   and      ecx, 0xff                                      <BIT>
+  0x1000903D:  81c180000000                   add      ecx, 0x80                                     
+  0x10009043:  884dc6                         mov      byte ptr [ebp - 0x3a], cl                     
+  0x10009046:  8b551c                         mov      edx, dword ptr [ebp + 0x1c]                   
+  0x10009049:  81e2ff000000                   and      edx, 0xff                                      <BIT>
+  0x1000904F:  c1e204                         shl      edx, 4                                         <BIT>
+  0x10009052:  8b4594                         mov      eax, dword ptr [ebp - 0x6c]                   
+  0x10009055:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x1000905A:  03d0                           add      edx, eax                                      
+  0x1000905C:  8855c7                         mov      byte ptr [ebp - 0x39], dl                     
+  0x1000905F:  8a4d14                         mov      cl, byte ptr [ebp + 0x14]                     
+  0x10009062:  884dc8                         mov      byte ptr [ebp - 0x38], cl                     
+  0x10009065:  8b5510                         mov      edx, dword ptr [ebp + 0x10]                   
+  0x10009068:  81e2ff000000                   and      edx, 0xff                                      <BIT>
+  0x1000906E:  83c260                         add      edx, 0x60                                     
+  0x10009071:  8855c9                         mov      byte ptr [ebp - 0x37], dl                     
+  0x10009074:  8b45bc                         mov      eax, dword ptr [ebp - 0x44]                   
+  0x10009077:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x1000907C:  c1e004                         shl      eax, 4                                         <BIT>
+  0x1000907F:  8b4db8                         mov      ecx, dword ptr [ebp - 0x48]                   
+  0x10009082:  81e1ff000000                   and      ecx, 0xff                                      <BIT>
+  0x10009088:  03c1                           add      eax, ecx                                      
+  0x1000908A:  8845ca                         mov      byte ptr [ebp - 0x36], al                     
+  0x1000908D:  8b4db4                         mov      ecx, dword ptr [ebp - 0x4c]                   
+  0x10009090:  81e1ff000000                   and      ecx, 0xff                                      <BIT>
+  0x10009096:  8b45b0                         mov      eax, dword ptr [ebp - 0x50]                   
+  0x10009099:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x1000909E:  99                             cdq                                                    
+  0x1000909F:  83e203                         and      edx, 3                                         <BIT>
+  0x100090A2:  03c2                           add      eax, edx                                      
+  0x100090A4:  c1f802                         sar      eax, 2                                        
+  0x100090A7:  8d14c8                         lea      edx, [eax + ecx*8]                            
+  0x100090AA:  8855cb                         mov      byte ptr [ebp - 0x35], dl                     
+  0x100090AD:  8b45b0                         mov      eax, dword ptr [ebp - 0x50]                   
+  0x100090B0:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x100090B5:  2503000080                     and      eax, 0x80000003                                <BIT>
+  0x100090BA:  7905                           jns      0x100090c1                                     [BR]
+  0x100090BC:  48                             dec      eax                                           
+  0x100090BD:  83c8fc                         or       eax, 0xfffffffc                                <BIT>
+  0x100090C0:  40                             inc      eax                                           
+  0x100090C1:  c1e006                         shl      eax, 6                                         <BIT>
+  0x100090C4:  8b4dac                         mov      ecx, dword ptr [ebp - 0x54]                   
+  0x100090C7:  81e1ff000000                   and      ecx, 0xff                                      <BIT>
+  0x100090CD:  03c1                           add      eax, ecx                                      
+  0x100090CF:  8845cc                         mov      byte ptr [ebp - 0x34], al                     
+  0x100090D2:  8b55a8                         mov      edx, dword ptr [ebp - 0x58]                   
+  0x100090D5:  81e2ff000000                   and      edx, 0xff                                      <BIT>
+  0x100090DB:  c1e204                         shl      edx, 4                                         <BIT>
+  0x100090DE:  8b45a4                         mov      eax, dword ptr [ebp - 0x5c]                   
+  0x100090E1:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x100090E6:  03d0                           add      edx, eax                                      
+  0x100090E8:  8855cd                         mov      byte ptr [ebp - 0x33], dl                     
+  0x100090EB:  8b4da0                         mov      ecx, dword ptr [ebp - 0x60]                   
+  0x100090EE:  81e1ff000000                   and      ecx, 0xff                                      <BIT>
+  0x100090F4:  8b459c                         mov      eax, dword ptr [ebp - 0x64]                   
+  0x100090F7:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x100090FC:  99                             cdq                                                    
+  0x100090FD:  83e203                         and      edx, 3                                         <BIT>
+  0x10009100:  03c2                           add      eax, edx                                      
+  0x10009102:  c1f802                         sar      eax, 2                                        
+  0x10009105:  8d14c8                         lea      edx, [eax + ecx*8]                            
+  0x10009108:  8855ce                         mov      byte ptr [ebp - 0x32], dl                     
+  0x1000910B:  8b459c                         mov      eax, dword ptr [ebp - 0x64]                   
+  0x1000910E:  25ff000000                     and      eax, 0xff                                      <BIT>
+  0x10009113:  2503000080                     and      eax, 0x80000003                                <BIT>
+  0x10009118:  7905                           jns      0x1000911f                                     [BR]
+  0x1000911A:  48                             dec      eax                                           
+  0x1000911B:  83c8fc                         or       eax, 0xfffffffc                                <BIT>
+  0x1000911E:  40                             inc      eax                                           
+  0x1000911F:  c1e006                         shl      eax, 6                                         <BIT>
+  0x10009122:  8b4d98                         mov      ecx, dword ptr [ebp - 0x68]                   
+  0x10009125:  81e1ff000000                   and      ecx, 0xff                                      <BIT>
+  0x1000912B:  03c1                           add      eax, ecx                                      
+  0x1000912D:  8845cf                         mov      byte ptr [ebp - 0x31], al                     
+  0x10009130:  6a14                           push     0x14                                          
+  0x10009132:  8b552c                         mov      edx, dword ptr [ebp + 0x2c]                   
+  0x10009135:  52                             push     edx                                           
+  0x10009136:  8d45c0                         lea      eax, [ebp - 0x40]                             
+  0x10009139:  50                             push     eax                                           
+  0x1000913A:  e8257fffff                     call     0x10001064                                     [CALL]
+  0x1000913F:  8d4dc0                         lea      ecx, [ebp - 0x40]                             
+  0x10009142:  51                             push     ecx                                           
+  0x10009143:  8a5508                         mov      dl, byte ptr [ebp + 8]                        
+  0x10009146:  52                             push     edx                                           
+  0x10009147:  e85880ffff                     call     0x100011a4                                     [CALL]
+  0x1000914C:  5f                             pop      edi                                           
+  0x1000914D:  5e                             pop      esi                                           
+  0x1000914E:  5b                             pop      ebx                                           
+  0x1000914F:  81c4c0000000                   add      esp, 0xc0                                     
+  0x10009155:  3bec                           cmp      ebp, esp                                      
+  0x10009157:  e8e49f0000                     call     0x10013140                                     [CALL]
+  0x1000915C:  8be5                           mov      esp, ebp                                      
+  0x1000915E:  5d                             pop      ebp                                           
+  0x1000915F:  c22800                         ret      0x28                                           <<< RET
+
+======================================================================
+ANALYSIS SUMMARY
+======================================================================
+
+Instruction counts (total=340):
+  mov         : 137
+  and         : 37
+  xor         : 28
+  lea         : 19
+  sub         : 17
+  add         : 14
+  imul        : 14
+  jns         : 10
+  dec         : 10
+  or          : 10
+  inc         : 10
+  push        : 9
+  shl         : 5
+  cdq         : 4
+  sar         : 4
+  pop         : 4
+  call        : 3
+  rep stosd   : 1
+  test        : 1
+  je          : 1
+
+XOR with immediate constants (potential key bytes):
+  0x10008DA7: xor, imm=0x18
+  0x10008DA7: xor, imm=0x18
+  0x10008DB4: xor, imm=0x16
+  0x10008DB4: xor, imm=0x16
+  0x10008DC3: xor, imm=0x16
+  0x10008DC3: xor, imm=0x16
+  0x10008DD1: xor, imm=0x13
+  0x10008DD1: xor, imm=0x13
+  0x10008DE0: xor, imm=0x13
+  0x10008DE0: xor, imm=0x13
+  0x10008DEE: xor, imm=0x18
+  0x10008DEE: xor, imm=0x18
+  0x10008DFD: xor, imm=0x18
+  0x10008DFD: xor, imm=0x18
+  0x10008E0B: xor, imm=0x16
+  0x10008E0B: xor, imm=0x16
+  0x10008E1A: xor, imm=0x16
+  0x10008E1A: xor, imm=0x16
+  0x10008E28: xor, imm=0x13
+  0x10008E28: xor, imm=0x13
+  0x10008E37: xor, imm=0x13
+  0x10008E37: xor, imm=0x13
+  0x10008E44: xor, imm=0x18
+  0x10008E44: xor, imm=0x18
+  0x10008E53: xor, imm=0x18
+  0x10008E53: xor, imm=0x18
+  0x10008E61: xor, imm=0x16
+  0x10008E61: xor, imm=0x16
+  0x10008E70: xor, imm=0x16
+  0x10008E70: xor, imm=0x16
+  0x10008E7E: xor, imm=0x13
+  0x10008E7E: xor, imm=0x13
+  0x10008E8D: xor, imm=0x13
+  0x10008E8D: xor, imm=0x13
+  0x10008E9B: xor, imm=0x18
+  0x10008E9B: xor, imm=0x18
+  0x10008EAA: xor, imm=0x18
+  0x10008EAA: xor, imm=0x18
+  0x10008EB8: xor, imm=0x16
+  0x10008EB8: xor, imm=0x16
+  0x10008EC7: xor, imm=0x16
+  0x10008EC7: xor, imm=0x16
+  0x10008ED4: xor, imm=0x13
+  0x10008ED4: xor, imm=0x13
+  0x10008EE3: xor, imm=0x13
+  0x10008EE3: xor, imm=0x13
+  0x10008EF1: xor, imm=0x18
+  0x10008EF1: xor, imm=0x18
+  0x10008F00: xor, imm=0x18
+  0x10008F00: xor, imm=0x18
+  0x10008F0E: xor, imm=0x16
+  0x10008F0E: xor, imm=0x16
+  0x10008F1D: xor, imm=0x16
+  0x10008F1D: xor, imm=0x16
+  0x10008F2B: xor, imm=0x13
+  0x10008F2B: xor, imm=0x13
+
+CALL targets (internal):
+
+Memory references to data sections (potential buffers/strings):
+
+======================================================================
+DEEP ANALYSIS: strings, tables, S-box patterns
+======================================================================
+
+--- .rdata @ VA=0x1003D000 (12288 bytes) ---
+  0x1003D01C: 'i386\chkesp.c'
+  0x1003D030: 'The value of ESP was not properly saved across a function call.  This is usually a result of calling a function declared with one calling convention with a function pointer declared with a different calling convention. '
+  0x1003D10C: 'mlock.c'
+  0x1003D114: 'LC_TIME'
+  0x1003D11C: 'LC_NUMERIC'
+  0x1003D128: 'LC_MONETARY'
+  0x1003D134: 'LC_CTYPE'
+  0x1003D140: 'LC_COLLATE'
+  0x1003D14C: 'LC_ALL'
+  0x1003D15C: 'setlocal.c'
+  0x1003D198: 'Assertion Failed'
+  0x1003D1AC: 'Error'
+  0x1003D1B4: 'Warning'
+  0x1003D1BC: '%s(%d) : %s'
+  0x1003D1D0: 'Assertion failed!'
+  0x1003D1E4: 'Assertion failed: '
+  0x1003D1F8: '_CrtDbgReport: String too long or IO Error'
+  0x1003D224: 'Second Chance Assertion Failed: File %s, Line %d'
+  0x1003D258: 'wsprintfA'
+  0x1003D264: 'user32.dll'
+  0x1003D270: 'Microsoft Visual C++ Debug Library'
+  0x1003D294: 'Debug %s!'
+  0x1003D29F: 'Program: %s%s%s%s%s%s%s%s%s%s%s'
+  0x1003D2C0: '(Press Retry to debug the application)'
+  0x1003D2E9: 'Module: '
+  0x1003D2F5: 'File: '
+  0x1003D2FD: 'Line: '
+  0x1003D308: 'Expression: '
+  0x1003D31A: 'For information on how your program can cause an assertion'
+  0x1003D355: 'failure, see the Visual C++ documentation on asserts.'
+  0x1003D390: '<program name unknown>'
+  0x1003D3A8: 'dbgrpt.c'
+  0x1003D3B4: 'szUserMessage != NULL'
+  0x1003D3CC: 'tidtable.c'
+  0x1003D3D8: 'ioinit.c'
+  0x1003D3E4: 'Client'
+  0x1003D3EC: 'Ignore'
+  0x1003D3F8: 'Normal'
+  0x1003D400: 'Free'
+  0x1003D408: 'Error: memory allocation: bad memory block type.'
+  0x1003D43C: 'Invalid allocation size: %u bytes.'
+  0x1003D464: 'Client hook allocation failure.'
+  0x1003D488: 'Client hook allocation failure at file %hs line %d.'
+  0x1003D4C0: 'dbgheap.c'
+  0x1003D4CC: '_CrtCheckMemory()'
+  0x1003D4E0: '_pFirstBlock == pOldBlock'
+  0x1003D4FC: '_pLastBlock == pOldBlock'
+  0x1003D518: 'fRealloc || (!fRealloc && pNewBlock == pOldBlock)'
+  0x1003D54C: '_BLOCK_TYPE(pOldBlock->nBlockUse)==_BLOCK_TYPE(nBlockUse)'
+  0x1003D588: 'pOldBlock->nLine == IGNORE_LINE && pOldBlock->lRequest == IGNORE_REQ'
+
+--- .data @ VA=0x10040000 (12288 bytes) ---
+  0x10040F74: '040a'
+  0x10040F94: '1252'
+  0x10040FA0: '040b'
+  0x10040FC0: '1252'
+  0x10040FCC: '040c'
+  0x10040FEC: '1252'
+  0x10040FF8: '040f'
+  0x10041018: '1252'
+  0x10041024: '041d'
+  0x10041044: '1252'
+  0x10041050: '042d'
+  0x10041070: '1252'
+  0x1004107C: '080a'
+  0x1004109C: '1252'
+  0x100410A8: '080c'
+  0x100410C8: '1252'
+  0x100410D4: '0c07'
+  0x100410F4: '1252'
+  0x10041100: '0c09'
+  0x10041120: '1252'
+  0x1004112C: '0c0a'
+  0x1004114C: '1252'
+  0x10041158: '0c0c'
+  0x10041178: '1252'
+  0x10041184: '100a'
+  0x100411A4: '1252'
+  0x100411B0: '100c'
+  0x100411D0: '1252'
+  0x100411DC: '140a'
+  0x100411FC: '1252'
+  0x10041208: '140c'
+  0x10041228: '1252'
+  0x10041234: '180a'
+  0x10041254: '1252'
+  0x10041260: '1c09'
+  0x10041280: '1252'
+  0x1004128C: '1c0a'
+  0x100412AC: '1252'
+  0x100412B8: '200a'
+  0x100412D8: '1252'
+  0x100412E4: '240a'
+  0x10041304: '1252'
+  0x10041310: '280a'
+  0x10041330: '1252'
+  0x1004133C: '2c0a'
+  0x1004135C: '1252'
+  0x10041368: '300a'
+  0x10041388: '1252'
+  0x10041394: '340a'
+  0x100413B4: '1252'
+
+--- Looking for 256-byte lookup tables (S-box candidates) ---

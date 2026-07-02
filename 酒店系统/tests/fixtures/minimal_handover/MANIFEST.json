@@ -1,0 +1,9 @@
+{
+  "handover_version": "1.0",
+  "generated_by": "pytest",
+  "generated_at": "2026-06-17T12:00:00",
+  "brand": "测试品牌",
+  "mode": "dll_direct",
+  "adapter_id": "test_fixture",
+  "dll_dependencies": {}
+}

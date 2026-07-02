@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://solid.pms/lock_adapters/profile/dll_probe_profile.schema.json",
+  "title": "DLL Probe Candidate Profile",
+  "description": "dll_probe.py 自动生成的 candidate profile 格式。与 profiles/*.json 完全兼容，但带 probe_meta 和 confidence 标记。",
+  "type": "object",
+  "required": ["brand", "detect", "dll", "payload", "confidence"],
+  "properties": {
+    "brand": {
+      "type": "string",
+      "description": "推断的品牌名"
+    },
+    "adapter_id": {
+      "type": "string",
+      "description": "自动生成的适配器 ID（格式 auto_<dll_stem>）"
+    },
+    "description": {
+      "type": "string",
+      "description": "profile 说明"
+    },
+    "detect": {
+      "type": "object",
+      "required": ["files"],
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "用于识别的特征文件名列表"
+        },
+        "optional_files": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "exports": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "自动探测到的导出函数名映射"
+        }
+      }
+    },
+    "dll": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "description": "DLL 文件名（相对路径）" },
+        "init": { "type": "string", "description": "初始化函数名" },
+        "read": { "type": "string", "description": "读卡函数名" },
+        "write": { "type": "string", "description": "写卡函数名" },
+        "guest": { "type": "string", "description": "发客人卡函数名" },
+        "erase": { "type": "string", "description": "擦卡函数名" },
+        "buzzer": { "type": "string", "description": "蜂鸣函数名" },
+        "close": { "type": "string", "description": "关闭连接函数名" },
+        "init_params": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "init 参数值列表（自动探测的候选值）"
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "magic": { "type": "string", "default": "C92B20B7" },
+        "size": { "type": "integer", "default": 16 }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "description": "payload 布局（可选，从现有 profile 继承）",
+      "properties": {
+        "site_offset": { "type": "integer" },
+        "site_len": { "type": "integer" },
+        "lock_no_offset": { "type": "integer" },
+        "lock_no_len": { "type": "integer" },
+        "salt_offset": { "type": "integer" },
+        "type_offset": { "type": "integer" },
+        "body_offset": { "type": "integer" },
+        "body_len": { "type": "integer" },
+        "chk_offset": { "type": "integer" },
+        "chk_len": { "type": "integer" }
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "探测置信度"
+    },
+    "supported": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否已完整支持"
+    },
+    "probe_meta": {
+      "type": "object",
+      "description": "dll_probe 探针元数据",
+      "properties": {
+        "probe_tool": { "type": "string" },
+        "dll_size": { "type": "integer" },
+        "total_exports": { "type": "integer" },
+        "matched_groups": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "install_dir": { "type": "string" }
+      }
+    },
+    "card_types": {
+      "type": "object",
+      "description": "卡型定义（可选，需人工补充）"
+    },
+    "checksum": {
+      "type": "object",
+      "description": "校验和算法（可选，需人工确认）"
+    }
+  }
+}

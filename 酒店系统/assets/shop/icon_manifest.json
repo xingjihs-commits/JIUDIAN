@@ -1,0 +1,46 @@
+{
+  "_comment": "[sub-i] 超市图标包清单 — 与 manifest.json 互补：本文件聚焦图标元数据（emoji 兜底表 + 分类图标映射），manifest.json 聚焦商品价格/库存/品牌等业务字段。ShopIconPack 加载本文件，配合 assets/shop/items/*.png 与 assets/shop/categories/*.png 提供「PNG 优先 + emoji 兜底」的统一图标解析。",
+  "version": "1.0",
+  "default_emoji": "📦",
+  "categories": {
+    "drink":   {"emoji": "🥤", "label_cn": "饮品",     "label_en": "Drinks",    "icon": "drink.png",   "color": "#5B8FB9"},
+    "food":    {"emoji": "🍜", "label_cn": "方便食品",  "label_en": "Food",      "icon": "food.png",    "color": "#D4A574"},
+    "snack":   {"emoji": "🍟", "label_cn": "休闲零食",  "label_en": "Snacks",    "icon": "snack.png",   "color": "#E8A87C"},
+    "daily":   {"emoji": "🧴", "label_cn": "日用百货",  "label_en": "Daily",     "icon": "daily.png",   "color": "#6B8E7B"},
+    "care":    {"emoji": "💊", "label_cn": "个人护理",  "label_en": "Medicine",  "icon": "care.png",    "color": "#C47E8A"},
+    "tobacco": {"emoji": "🚬", "label_cn": "烟酒",     "label_en": "Tobacco",   "icon": "tobacco.png", "color": "#9B6BA8"}
+  },
+  "sku_emoji_map": {
+    "WATER": "💧", "COLA": "🥤", "SPRITE": "🥤", "FANTA": "🍊", "BEER": "🍺",
+    "BEER_CAN": "🍺", "REDBULL": "🥫", "ENERGY": "⚡", "SPORTS": "🏃", "JUICE": "🧃",
+    "ICE_TEA": "🍹", "MILK": "🥛", "YOGURT": "🥛", "COFFEE_RTD": "☕", "TEA_RTD": "🍵",
+    "COCONUT": "🥥", "SPARKLING": "💧", "ELECTROLYTE": "💧", "COFFEE_POWDER": "☕", "TEA_BAG": "🍵",
+    "HONEY": "🍯", "PLANT_MILK": "🥛", "CHILD_DRINK": "🧃",
+    "WINE": "🍷", "LIQUOR": "🍶", "SOJU": "🥃", "CHAMPAGNE": "🍾", "COCKTAIL": "🍸",
+    "WHISKY": "🥃", "VODKA": "🍶", "RUM": "🥃", "BEER_DARK": "🍺",
+
+    "NOODLE": "🍜", "NOODLE_BAG": "🍜", "INSTANT_RICE": "🍚", "PORRIDGE": "🥣",
+    "BREAD": "🍞", "EGG": "🥚", "SAUSAGE": "🌭", "CANNED_FOOD": "🥫",
+    "CUP_RICE": "🍚", "PASTA": "🍝", "DUMPLING": "🥟", "BUN": "🥯",
+
+    "CHIPS": "🍟", "CHOCO": "🍫", "CANDY": "🍬", "COOKIE": "🍪", "GUM": "🍬",
+    "NUTS": "🥜", "JERKY": "🥓", "SEAWEED": "🟢", "POPCORN": "🍿", "CRACKER": "🍘",
+    "DRIED_FRUIT": "🍇", "SEED": "🌻", "WAFFER": "🍘",
+
+    "SHAMPOO": "🧴", "SOAP": "🧼", "TOOTHBRUSH": "🪥", "TOOTHPASTE": "🪥",
+    "TOWEL": "🧖", "SHOWER_GEL": "🧴", "LOTION": "🧴", "COMB": "💇",
+    "RAZOR": "🪒", "SLIPPER": "🥿", "FACIAL": "🧻", "TISSUE": "🧻",
+    "TISSUE_POCKET": "🧻", "WET_WIPE": "🧴", "SANITIZER": "🧴", "LAUNDRY": "🧺",
+    "SANITARY": "🩹", "CONDOM": "🛡️", "COTTON": "☁️",
+
+    "ASPIRIN": "💊", "BANDAID": "🩹", "VITAMIN": "💊", "COLD_TABLET": "💊",
+    "ANTACID": "💊", "THERMOMETER": "🌡️", "MASK": "😷",
+
+    "CIGARETTE": "🚬", "LIGHTER": "🔥", "CIGAR": "🚬",
+
+    "CHARGER": "🔌", "USB_CABLE": "🔌", "BATTERY": "🔋", "EARPHONE": "🎧",
+    "PHONE_CASE": "📱", "ADAPTER": "🔌",
+
+    "SOUVENIR": "🎁", "POSTCARD": "📮", "KEYCHAIN": "🔑", "MAP": "🗺️"
+  }
+}

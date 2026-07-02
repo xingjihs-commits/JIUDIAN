@@ -1,0 +1,39 @@
+target-version = "py311"
+line-length = 120
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "W",    # pycodestyle warnings
+    "N",    # pep8-naming
+    "B",    # flake8-bugbear
+    "S",    # flake8-bandit
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+]
+ignore = [
+    "E501",
+    "S101",
+    "S104",
+    "S301",
+    "N802",
+    "N803",
+    "N806",
+    "N815",
+    "N818",
+    "B028",
+    "B904",
+    "SIM105",
+    "SIM108",
+]
+
+[lint.per-file-ignores]
+"bridgecore/panic_recovery.py" = ["N"]
+"lock_adapters/*" = ["N", "S"]
+"legacy_migration/*" = ["N", "S"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false

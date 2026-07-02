@@ -1,0 +1,4 @@
+# 挂失/止用卡 (LockCard) 真实样本
+#
+# 来自 CardLock260527.MDB
+C92B20B76715B1A0004F15BA4A15BA4A

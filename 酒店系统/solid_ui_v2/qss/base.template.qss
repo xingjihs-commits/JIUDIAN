@@ -1,0 +1,4849 @@
+/* [UI-REDESIGN] 2026-06-14 改动: 全量重构基础样式表 — 侧栏active左色条、KPI卡片视觉升级、按钮层级统一加高、卡片圆角更圆润、输入框焦点更清晰 */
+/* ═══════════════════════════════════════════════════════════════
+ * base.qss — 四主题共享通用样式 v3.0
+ *
+ * 核心改动：
+ *  1. 侧栏 NavBtnFrame — active 态改为 border-left 3px 主色条（原仅背景色）
+ *  2. NavBtnFrame 最小高度统一为 3@radius.md@（原 40px 上下不稳）
+ *  3. KPI 数值 font-size 24px → 2@radius.md@，更具视觉冲击力
+ *  4. ContentBox 顶部双像素 accent 色条，快速定位信息区
+ *  5. 卡片圆角统一 radius_md(5px)，现代感更强
+ *  6. 输入框 focus 环改用 @accent@ 色，与主色区分
+ *  7. 按钮高度统一：全站 3@radius.sm@（v7 规范，靠颜色/字重分级）
+ *  8. TopBar 增加底部细线分隔，层次更清晰
+ *  9. 分组标签增加 letter-spacing，更具导航专业感
+ * 10. 表格交替行色更柔和，长列表更易阅读
+ *
+ * ── 全站背景 L0→L3（唯一标准，禁止混用旧 token）──
+ *  L0 @bg@       画布（页面底色）
+ *  L1 @bg@  面板 / 铬条 / 三栏底板
+ *  L2 @surface@       浮起卡片 FdCard
+ *  L3 @surface@       数据井（surface_alt↔bg 暖色插值，非冷灰）
+ *  侧栏 @sidebar@     独立深色带（与 L0–L3 平行，不混用）
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * 1. 全局基线与字体
+ * ═══════════════════════════════════════════════════════════════ */
+* {
+    font-family: "Microsoft YaHei UI", "Khmer OS", "Leang Eng", "PingFang SC", "Segoe UI", sans-serif;
+}
+QWidget {
+    font-size: @font.md@;
+}
+*:focus { outline: none; }
+
+/* ── 六级字体层级体系 ── */
+QLabel#H1Title { font-size: @font.2xl@; font-weight: 700; letter-spacing: 0.5px; }
+QLabel#H2Title { font-size: @font.xl@; font-weight: 600; color: @text@; }
+QLabel#H3Title { font-size: @font.lg@; font-weight: 600; }
+QLabel#H4Title { font-size: @font.md@; font-weight: 600; color: @text@; }
+QLabel#Body     { font-size: @font.md@; font-weight: 400; }
+QLabel#Small    { font-size: @font.sm@; font-weight: 400; color: @text_muted@; }
+QLabel#Tiny     { font-size: @font.xs@; font-weight: 400; color: @text_muted@; }
+
+QPushButton#H1Title,
+QPushButton#H2Title,
+QPushButton#H3Title,
+QPushButton#H4Title {
+    font-size: inherit;
+    background-color: inherit;
+}
+
+QWidget {
+    color: @text@;
+}
+/* ═══════════════════════════════════════════════════════════════
+ * Fusion 暗色泄露防护 — 全局 widget 底色兜底（background-color）
+ * Qt6 Fusion 对 background: 简写部分忽略；此块用 background-color 确保不露黑底
+ *
+ * SurfacePanel — 全站统一容器（见 ui_surface.py），新代码匿名面板必须用它
+ * QWidget / QFrame — 全局安全网，防存量未迁移的匿名容器露黑底
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ── QMainWindow ── */
+QMainWindow {
+    background-color: @bg@;
+}
+
+/* ── 命名容器（特异度更高，精确控制）── */
+QWidget#SurfacePanel,
+QFrame#SurfacePanel {
+    background-color: @bg@;
+}
+
+QDialog, QMessageBox {
+    background-color: @surface@;
+    border-radius: @font.sm@;
+}
+QHeaderView::section {
+    background-color: @bg@;
+    color: @text_muted@;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.@radius.md@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    padding: 9px @font.sm@;
+    min-height: 3@radius.sm@;
+}
+QTableCornerButton::section {
+    background-color: @bg@;
+}
+/* ── QPushButton 全局兜底（Fusion 暗色模式绕过 QPalette，必须 QSS background-color）── */
+QPushButton {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 0 @font.lg@;
+    min-height: 3@radius.sm@;
+}
+QPushButton:hover {
+    background-color: @selected_bg@;
+    border-color: @text_muted@;
+}
+QPushButton:pressed {
+    padding-top: 1px;
+    background-color: @primary_20pct@;
+}
+QPushButton:disabled {
+    color: @text_muted@;
+    background-color: @surface_alt@;
+    border-color: @border@;
+}
+/* ── QToolButton 全局兜底（交互态完整）── */
+QToolButton {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 4px @font.xs@;
+    min-height: 3@radius.sm@;
+    cursor: pointer;
+}
+QToolButton:hover {
+    background-color: @selected_bg@;
+}
+QToolButton:pressed {
+    background-color: @primary_20pct@;
+    padding-top: 1px;
+}
+QToolButton:disabled {
+    color: @text_muted@;
+    background-color: @surface_alt@;
+    border-color: @border@;
+}
+QToolButton:checked {
+    background-color: @selected_bg@;
+    color: @primary@;
+    border: 1px solid @primary@;
+}
+QToolButton:focus {
+    border: 2px solid @gold_thread@;
+}
+/* QSpinBox, QDoubleSpinBox {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 0 @font.xs@;
+    min-height: 32px;
+}
+QLineEdit {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 0 @font.sm@;
+    min-height: 32px;
+}
+QComboBox {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 0 @font.xs@;
+    min-height: 32px;
+}
+/* ── 以上全局兜底不覆盖已有 objectName 选择器 —— 靠 CSS 特异性自动让位 ── */
+/* 表格/ContentBox/交班等实底 → 必须调 ui_surface.fd_apply_*，勿只靠本文件 */
+
+QMainWindow, QWidget#AppRoot {
+    background-color: @bg@;
+}
+
+/* 主壳层级 — 与 L0 画布同色，防止 Qt 未设色区域露底 */
+QWidget#RightContent,
+QWidget#BodyContainer,
+QStackedWidget#MainStack,
+QStackedWidget,
+QWidget#MatrixPage,
+QWidget#RoomMatrixRoot {
+    background-color: @bg@;
+}
+
+/* 右侧工作台 + 前台 — 与左侧房态同 L0 画布，分屏不再两色 */
+QWidget#WorkspaceDock,
+QWidget#WorkspaceDockPanel,
+QWidget#FrontdeskHubWidget,
+QWidget#FrontdeskHubWidget QScrollArea > QWidget#qt_scrollarea_viewport {
+    background-color: @bg@;
+}
+/* WorkspaceDock QTabWidget::pane 已由全局 QTabWidget::pane 规则（§2119）覆盖 */
+
+/* 滚动视口默认 L0 实底 — 匿名 QScrollArea（_wrap_scroll 等）不再露黑/透明缝 */
+QScrollArea > QWidget#qt_scrollarea_viewport {
+    background-color: @bg@;
+}
+QScrollArea#PageScrollWrap {
+    background-color: @bg@;
+    border: none;
+}
+
+/* 内层透明 — 仅限房态/收银专用 split（勿全局 QSplitter transparent） */
+QWidget#RoomCardBody,
+QStackedWidget#MatrixStack,
+QSplitter#FdCheckinVSplit,
+QSplitter#MatrixRoomSplit {
+    background-color: transparent;
+}
+QSplitter#WorkspaceSplit,
+QSplitter#FinanceMainSplitter {
+    background-color: @bg@;
+}
+QSplitter#WorkspaceSplit::handle,
+QSplitter#FinanceMainSplitter::handle {
+    background-color: @bg@;
+}
+
+/* L0 页面画布 — 各 Tab 根容器统一底色 */
+QWidget#HotelOverviewTabV4,
+QWidget#FinanceTab,
+QWidget#InventoryTab,
+QWidget#MemberTab,
+QWidget#PricingTab,
+QWidget#ShiftTab,
+QWidget#ShopTab,
+QWidget#GuestListTab,
+QWidget#ServiceRequestPanel,
+QWidget#StaffTab,
+QWidget#UnifiedRoomPage,
+QWidget#SystemConsolePage,
+QWidget#VendorConsolePage,
+QWidget#FdCheckinRoot,
+QWidget#NightAuditTab,
+QWidget#AuditTab,
+QWidget#EnergyAuditGroup,
+QWidget#EnergyMonitorPanel,
+QWidget#HousekeepingPanel,
+QWidget#ItemDictionaryPage,
+QWidget#ReportTab,
+QWidget#OTATab,
+QWidget#CardSystemRoot,
+QWidget#InventoryDiffPage,
+QWidget#RefundsTab {
+    background-color: @bg@;
+}
+
+/* PaymentMethodTilesV4 — 支付方式磁贴区 L1 bg_container 面板底 */
+QWidget#PaymentMethodTilesV4 {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+}
+
+/* L1 条带 — bg_container 实底 + 底边线（色板已校正 L0-L1≥1.20） */
+QFrame#FrontdeskDashStrip,
+QWidget#MatrixFilterBar {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+    min-height: 3@radius.sm@;
+}
+QWidget#FrontdeskHubWidget QFrame#FrontdeskDashStrip {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+}
+QScrollArea#FdHubToolbar {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+}
+QScrollArea#FdHubToolbar > QWidget > QWidget {
+    background-color: @bg@;
+}
+QLabel#DashStatChip,
+QLabel#DashStatChipWarn {
+    background-color: transparent;
+    color: @text_muted@;
+    font-size: @font.sm@;
+    padding: 2px @radius.sm@;
+}
+QLabel#DashStatChipWarn {
+    color: @room_reserved@;
+    font-weight: 600;
+}
+QLabel#DashSep {
+    color: @text_dim@;
+    background-color: transparent;
+    padding: 0 4px;
+}
+QLineEdit#MatrixSearchInline {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: 0 @font.xs@;
+    min-height: 30px;
+    max-height: 34px;
+}
+QComboBox#FilterFloorCombo {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: 0 @radius.md@;
+    min-height: 30px;
+}
+
+/* L1 铬条带 — 顶栏与迷你标签同属一条 L1，仅标签条底部分一条线 */
+QWidget#SmartHeader,
+QFrame#SmartHeader {
+    background-color: @bg@;
+    border: none;
+    border-bottom: none;
+    min-height: 40px;
+}
+/* MiniTab 按钮 — 迷你标签条的标签按钮，bg_container 底色 + accent 激活态底部色条 */
+QPushButton#MiniTabButton {
+    /* [F07] 背景改为 @bg@ 与顶栏底板同色，消除白块漏出感 */
+    background-color: @bg@;
+    color: @text_muted@;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 4px @font.sm@;
+    font-size: @font.sm@;
+    font-weight: 500;
+}
+QPushButton#MiniTabButton:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+QPushButton#MiniTabButton[active="true"] {
+    color: @primary@;
+    font-weight: 700;
+    border-bottom: 2px solid @accent@;
+    background-color: @surface@;
+}
+QPushButton#MiniTabButton:pressed {
+    background-color: @primary_20pct@;
+}
+QPushButton#MiniTabButton:disabled {
+    color: @text_dim@;
+    background-color: @bg@;
+}
+QPushButton#MiniTabScrollBtn {
+    background-color: @bg@;
+    color: @text_muted@;
+    border: none;
+    border-radius: 4px;
+    min-width: 24px;
+    max-width: 24px;
+    min-height: 24px;
+    max-height: 24px;
+    padding: 0;
+    font-size: @font.xs@;
+}
+QPushButton#MiniTabScrollBtn:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+QPushButton#MiniTabScrollBtn:disabled { color: @text_dim@; }
+/* MiniTabStrip 定义移至 smart_header.py 内联 QSS */
+QFrame#EnhancedStatusBar,
+QWidget#StatusBar {
+    background-color: @bg@;
+    border-top: 1px solid @border@;
+    color: @text_muted@;
+    font-size: @font.sm@;
+    min-height: 24px;
+    max-height: 2@radius.md@;
+}
+QFrame#EnhancedStatusBar QLabel,
+QWidget#StatusBar QLabel {
+    background-color: transparent;
+}
+
+/* ── 弹窗 / 对话框 / 分组框 ── */
+QGroupBox {
+    background-color: transparent;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+
+/* ── 弹窗通用样式（G06 统一规范：标题区 / 分割线 / 底部按钮）── */
+QFrame#DialogHeader {
+    background-color: @surface@;
+    border-bottom: 1px solid @border@;
+    border-top-left-radius: @radius.lg@;
+    border-top-right-radius: @radius.lg@;
+    padding: @font.lg@ @font.xl@ @font.md@;
+}
+QLabel#DialogTitle {
+    font-size: @font.xl@;
+    font-weight: 800;
+    color: @text@;
+}
+QLabel#DialogSubtitle {
+    font-size: @font.sm@;
+    color: @text_muted@;
+    margin-top: 2px;
+}
+/* G06: 弹窗底部按钮区统一样式 */
+QDialogButtonBox {
+    background-color: @bg@;
+    border-top: 1px solid @border@;
+    border-bottom-left-radius: @radius.lg@;
+    border-bottom-right-radius: @radius.lg@;
+    padding: @font.sm@ @font.lg@;
+}
+QDialogButtonBox QPushButton {
+    min-width: 8@radius.md@;
+    min-height: 3@radius.sm@;
+    border-radius: @radius.sm@;
+    font-size: @font.sm@;
+    font-weight: 600;
+    padding: 0 @font.xl@;
+}
+QDialogButtonBox QPushButton[default="true"],
+QDialogButtonBox QPushButton#ok,
+QDialogButtonBox QPushButton[text="确定"],
+QDialogButtonBox QPushButton[text="保存"],
+QDialogButtonBox QPushButton[text="确认"] {
+    background-color: @primary@;
+    color: @surface@;
+    border: none;
+}
+QDialogButtonBox QPushButton[default="true"]:hover,
+QDialogButtonBox QPushButton#ok:hover {
+    background-color: @primary_hover@;
+}
+QDialogButtonBox QPushButton[text="取消"],
+QDialogButtonBox QPushButton[text="关闭"],
+QDialogButtonBox QPushButton#cancel {
+    background-color: @bg@;
+    color: @text_muted@;
+    border: 1px solid @border@;
+}
+QDialogButtonBox QPushButton[text="取消"]:hover,
+QDialogButtonBox QPushButton#cancel:hover {
+    color: @text@;
+    border-color: @text_muted@;
+}
+QComboBox, QPlainTextEdit, QTextEdit {
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    border-radius: @radius.sm@;
+    padding: @radius.sm@ @font.xs@;
+    background-color: @surface@;
+    border: 1px solid @border@;
+}
+QComboBox::drop-down {
+    border-left: 1px solid @border@;
+}
+QLabel {
+    background-color: transparent;
+}
+
+QSplitter::handle {
+    background-color: @border@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 2. 顶栏 — 增加底部细线，层次更清晰
+ * ═══════════════════════════════════════════════════════════════ */
+QWidget#TopBar {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    min-height: 5@radius.sm@;
+    max-height: 5@radius.sm@;
+}
+
+
+
+QLabel#TopBarBrand {
+    font-size: @font.md@;
+    font-weight: 700;
+    color: @primary@;
+}
+
+QLabel#HeaderSMark {
+    background-color: @primary@;
+    border-radius: @radius.sm@;
+    padding: 0;
+}
+
+QLabel#HeaderCurrentOp {
+    color: @text_muted@;
+    font-weight: 500;
+    font-size: @font.sm@;
+    padding: 2px @radius.sm@;
+    border: none;
+    background-color: transparent;
+}
+
+QLabel#HeaderCurrentOp[loggedIn="false"] {
+    color: @danger@;
+    background-color: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 3. 前台筛选芯片
+ * ═══════════════════════════════════════════════════════════════ */
+QLabel#FdFilterChip {
+    background-color: transparent;
+    color: @text_muted@;
+    border: 1px solid @border@;
+    border-radius: @font.lg@;
+    padding: 2px @font.sm@;
+    font-size: @font.sm@;
+}
+QLabel#FdFilterChip:hover {
+    border-color: @text_muted@;
+    color: @text@;
+}
+QLabel#FdFilterChip[active="true"] {
+    background-color: @primary@;
+    color: @surface@;
+    border-color: @primary@;
+    font-weight: 600;
+}
+
+/* 账面流水筛选芯片 — 金线 active 态 */
+QPushButton#FdFilterChip {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @font.lg@;
+    color: @text_muted@;
+    padding: 2px @font.md@;
+    min-height: 22px;
+    max-height: 30px;
+    font-size: @font.sm@;
+}
+QPushButton#FdFilterChip:hover {
+    color: @text@;
+    border-color: @text_muted@;
+}
+QPushButton#FdFilterChip[active="true"] {
+    color: @gold_thread@;
+    background-color: @surface@;
+    border-color: @gold_thread@;
+    border-bottom: 2px solid @gold_thread@;
+    font-weight: 600;
+}
+/* 流水筛选条 — 「全部/入账」芯片承载区 */
+QFrame#FdLedgerFilterBar {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    border-radius: 0;
+}
+
+/* ── 品牌区 ── */
+QWidget#BrandArea {
+    background-color: @sidebar@;
+    min-height: 72px;
+    max-height: 8@radius.md@;
+}
+QWidget#BrandWordmark {
+    background-color: transparent;
+}
+QLabel#BrandLogo {
+    background-color: @sidebar@;
+    border-radius: @radius.md@;
+}
+QLabel#BrandWordTitle {
+    color: @btn_anchor_fg@;
+    background-color: transparent;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+QLabel#BrandWordSub {
+    color: @gold_thread@;
+    background-color: transparent;
+    font-size: @font.xs@;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+QLabel#SidebarRoleLabel {
+    color: @surface@;
+    font-size: @font.sm@;
+}
+
+/* 品牌区底部分隔线（烫金色） */
+QFrame#BrandSep {
+    background-color: @gold_thread@;
+    min-height: 1px;
+    max-height: 1px;
+    border: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 5. 侧边栏 — 全面重构：左色条 active 指示、44px 按钮、字间距分组标签
+ * ═══════════════════════════════════════════════════════════════ */
+QFrame#LeftSidebar {
+    background-color: @sidebar@;
+    border-right: 1px solid rgba(200,214,227,0.08);
+}
+QFrame#LeftSidebar[collapsed="true"] {
+    background-color: @sidebar@;
+    border-right: none;
+}
+
+
+QScrollArea#SidebarScroll {
+    background-color: @sidebar@;
+    border: none;
+}
+QScrollArea#SidebarScroll > QWidget > QWidget,
+QWidget#SidebarScrollViewport {
+    background-color: @sidebar@;
+}
+QWidget#SidebarScrollContainer {
+    background-color: @sidebar@;
+}
+
+/* 侧栏子控件默认透明，与面板同色（防全局 @bg@ 渗透） */
+QFrame#LeftSidebar QWidget {
+    background-color: transparent;
+}
+QFrame#LeftSidebar QPushButton {
+    background-color: transparent;
+    border: none;
+    color: @sidebar_text@;
+}
+QFrame#LeftSidebar QWidget#BrandArea,
+QScrollArea#SidebarScroll,
+QWidget#SidebarScrollViewport,
+QWidget#SidebarScrollContainer,
+QWidget#SidebarRoleStrip {
+    background-color: @sidebar@;
+}
+
+/* 分组标签 — 全大写（Python 端已 uppercase）、字间距强调、轻透白 */
+QLabel#SidebarGroupLabel {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: @font.xs@;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    padding: @font.xs@ @font.sm@ 4px @font.sm@;
+    background-color: transparent;
+    border: none;
+    margin-top: 4px;
+}
+
+/* ── NavBtnFrame：默认与侧栏面板同色，hover/active 才提亮 ── */
+QFrame#NavBtnFrame {
+    background-color: transparent;
+    border-left: 3px solid transparent;
+    min-height: 3@radius.md@;
+    padding: 2px @font.sm@;
+    border-radius: 0 @radius.sm@ @radius.sm@ 0;
+}
+QFrame#NavBtnFrame:hover {
+    background-color: rgba(200,214,227,0.12);
+    border-left: 3px solid rgba(200,180,128,0.5);
+}
+QFrame#NavBtnFrame[active="true"] {
+    background-color: rgba(91,143,185,0.18);
+    border-left: 3px solid @gold_thread@;
+}
+
+QFrame#NavBtnFrame[active="true"] QLabel#NavBtnText {
+    color: @surface@;
+    font-weight: 700;
+}
+QFrame#NavBtnFrame[active="true"] QLabel#NavBtnIcon {
+    color: @accent@;
+}
+QFrame#LeftSidebar QLabel#NavBtnText {
+    color: @sidebar_text@;
+    background-color: transparent;
+    font-size: @font.md@;
+    font-weight: 500;
+}
+QFrame#LeftSidebar QLabel#NavBtnIcon {
+    color: #8BA4BE;
+    background-color: transparent;
+}
+QFrame#LeftSidebar QLabel#SidebarGroupLabel {
+    color: rgba(200,214,227,0.30);
+}
+/* 分组分隔线 — 使用 sidebar_hover 作为分隔色，四主题一致可见 */
+QFrame#SidebarGroupSep {
+    background-color: @sidebar_hover@;
+    min-height: 1px;
+    max-height: 1px;
+    margin: 4px @font.md@;
+    border: none;
+}
+QFrame#LeftSidebar QLabel#SidebarRoleLabel {
+    color: @sidebar_text@;
+}
+
+
+QWidget#SidebarRoleStrip {
+    background-color: @sidebar@;
+    border-top: 1px solid rgba(200,214,227,0.12);
+}
+
+/* ── 汉堡折叠按钮 ── */
+QPushButton#HamburgerBtn {
+    background-color: @bg@;
+    border: 1px solid transparent;
+    border-radius: @radius.md@;
+    font-size: 1@radius.md@;
+    color: @text@;
+    padding: 0 @radius.sm@;
+    min-width: 34px;
+    min-height: 34px;
+}
+QPushButton#HamburgerBtn:hover {
+    background-color: @selected_bg@;
+    border-color: @border@;
+}
+
+/* ── 状态栏标签 ── */
+QLabel#StatusTag {
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    font-size: @font.xs@;
+    color: @text_muted@;
+    padding: 2px @radius.md@;
+}
+QLabel#StatusTag[active="true"] {
+    color: @primary@;
+    font-weight: 600;
+}
+QPushButton#CartBtn {
+    background-color: @bg@;
+    color: @text_muted@;
+    border: 1px solid @border@;
+    border-radius: 4px;
+    padding: 1px @radius.md@;
+    font-size: @font.xs@;
+    min-height: 2@radius.md@;
+}
+QPushButton#CartBtn:hover {
+    border-color: @primary@;
+    color: @text@;
+}
+QPushButton#CartBtn[flash="true"] {
+    background-color: @primary@;
+    color: @surface@;
+    border-color: @primary@;
+    font-weight: 600;
+}
+
+/* ── ③ 门锁/卡片操作面板（实底由 ui_surface fd_apply_card_action_bar 设色） ── */
+QFrame#FdActionBar {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+}
+QFrame#FdActionBarSep {
+    background-color: @border@;
+    border: none;
+    border-radius: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 6. 上下文栏与页面标题
+ * ═══════════════════════════════════════════════════════════════ */
+QLabel#PageTitle {
+    font-size: 1@radius.md@;
+    font-weight: 700;
+    color: @text@;
+    letter-spacing: 0.2px;
+}
+
+QLabel#FilterBarSep {
+    color: @text_dim@;
+}
+
+
+
+
+QLabel#EnergyPageTitle {
+    font-size: @font.lg@;
+    font-weight: 700;
+    color: @text@;
+    background-color: transparent;
+}
+QLabel#FdMutedLabel {
+    font-size: @font.sm@;
+    color: @text_muted@;
+    background-color: transparent;
+}
+
+
+QLabel#PendingBadge[pending="true"] {
+    border-color: @danger@;
+    color: @danger@;
+    background-color: @surface@;
+}
+QLabel#LoginRoleCaption {
+    color: @text@;
+    font-size: @font.sm@;
+    font-weight: 600;
+    background-color: transparent;
+}
+QLabel#LoginBrandIcon {
+    font-size: 42px;
+    background-color: transparent;
+    color: @text@;
+}
+QLabel#LoginBrandText {
+    font-size: @font.lg@;
+    font-weight: 700;
+    color: @primary@;
+    letter-spacing: 2px;
+    background-color: transparent;
+}
+QLabel#FdWarnLabel {
+    color: @danger@;
+    font-size: @font.sm@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 10. 按钮层级体系 — 4 主层 + 1 危险 + 专用场景
+ *
+ *   🅰 主按钮   → 主色实底，44px，一页最重要
+ *   🅱 次按钮   → 主色半透，3@radius.sm@，辅助操作
+ *   🅲 幽灵按钮 → 浅底灰边，3@radius.sm@，工具栏/筛选
+ *   🅳 朴素按钮 → 透明无框，侧栏/导航/设置
+ *   🆇 危险按钮 → 红色实底，删除/退房
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ────────── 🅰 主按钮 3@radius.sm@（v7 统一高度，靠颜色分级）────────── */
+/* [F03] 补全：原为空注释占位，全站主操作按钮无主色实底 */
+QPushButton#FdActPrimary,
+QPushButton#PrimaryBtn,
+QPushButton#BtnCheckin,
+QPushButton#BtnCheckout,
+QPushButton#BtnPay {
+    background-color: @primary@;
+    color: @surface@;
+    border: none;
+    border-radius: @radius.md@;
+    padding: 0 @font.xl@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    font-weight: 700;
+    font-size: @font.md@;
+}
+QPushButton#FdActPrimary:hover,
+QPushButton#PrimaryBtn:hover,
+QPushButton#BtnCheckin:hover,
+QPushButton#BtnCheckout:hover,
+QPushButton#BtnPay:hover {
+    background-color: @primary_hover@;
+}
+QPushButton#FdActPrimary:pressed,
+QPushButton#PrimaryBtn:pressed,
+QPushButton#BtnCheckin:pressed,
+QPushButton#BtnCheckout:pressed,
+QPushButton#BtnPay:pressed {
+    background-color: @primary_hover@;
+    padding-top: 1px;
+}
+QPushButton#FdActPrimary:disabled,
+QPushButton#PrimaryBtn:disabled,
+QPushButton#BtnCheckin:disabled,
+QPushButton#BtnCheckout:disabled,
+QPushButton#BtnPay:disabled {
+    background-color: @surface_alt@;
+    color: @text_muted@;
+    border: 1px solid @border@;
+}
+
+/* ── 🅰 超大号收银提交按钮 4@radius.md@ ── */
+QPushButton#FdActSubmit,
+QPushButton#SubmitBtn {
+    background-color: @primary@;
+    color: @surface@;
+    border: none;
+    border-radius: @radius.md@;
+    padding: 0 24px;
+    min-height: 4@radius.md@;
+    max-height: 4@radius.md@;
+    font-weight: 800;
+    font-size: @font.lg@;
+}
+QPushButton#FdActSubmit:hover, QPushButton#SubmitBtn:hover {
+    background-color: @primary_hover@;
+}
+QPushButton#FdActSubmit:disabled, QPushButton#SubmitBtn:disabled {
+    background-color: @surface_alt@; color: @text_muted@;
+}
+
+/* ────────── 🅱 次按钮 ────────── */
+QPushButton#FdActSecondary,
+QPushButton#SecondaryBtn,
+QPushButton#BtnExit, QPushButton#BtnVerify {
+    background-color: @bg@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: 0 @font.lg@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    font-weight: 600;
+}
+QPushButton#FdActSecondary:hover,
+QPushButton#SecondaryBtn:hover,
+QPushButton#BtnExit:hover, QPushButton#BtnVerify:hover {
+    background-color: @primary_20pct@;
+    border-color: @text_muted@;
+    color: @text@;
+}
+QPushButton#FdActSecondary:focus,
+QPushButton#SecondaryBtn:focus,
+QPushButton#BtnExit:focus, QPushButton#BtnVerify:focus {
+    background-color: @selected_bg@;
+}
+QPushButton#FdActSecondary:pressed,
+QPushButton#SecondaryBtn:pressed,
+QPushButton#BtnExit:pressed, QPushButton#BtnVerify:pressed {
+    padding-top: 1px;
+    background-color: @primary@;
+    color: @surface@;
+}
+QPushButton#FdActSecondary:disabled,
+QPushButton#SecondaryBtn:disabled,
+QPushButton#BtnExit:disabled, QPushButton#BtnVerify:disabled {
+    color: @text_muted@;
+    border-color: @border@;
+    background-color: @surface_alt@;
+}
+
+
+/* ────────── 🅲 幽灵按钮 3@radius.sm@ ────────── */
+/* [F05] 补全：透明底 + 主色描边，工具栏/筛选条场景 */
+QPushButton#GhostBtn,
+QPushButton#FdActGhost,
+QPushButton#ToolbarBtn {
+    background-color: transparent;
+    color: @primary@;
+    border: 1px solid @primary@;
+    border-radius: @radius.md@;
+    padding: 0 @font.lg@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    font-weight: 500;
+}
+QPushButton#GhostBtn:hover,
+QPushButton#FdActGhost:hover,
+QPushButton#ToolbarBtn:hover {
+    background-color: @selected_bg@;
+    border-color: @primary_hover@;
+    color: @primary_hover@;
+}
+QPushButton#GhostBtn:pressed,
+QPushButton#FdActGhost:pressed,
+QPushButton#ToolbarBtn:pressed {
+    background-color: @primary_20pct@;
+    padding-top: 1px;
+}
+QPushButton#GhostBtn:disabled,
+QPushButton#FdActGhost:disabled,
+QPushButton#ToolbarBtn:disabled {
+    color: @text_muted@;
+    border-color: @border@;
+    background-color: transparent;
+}
+
+/* ────────── 🆇 危险按钮 ────────── */
+/* [F04] 补全：红色实底，退房/删除等破坏性操作 */
+QPushButton#DangerBtn,
+QPushButton#FdActDanger,
+QPushButton#BtnDelete,
+QPushButton#BtnForceCheckout {
+    background-color: @danger@;
+    color: @surface@;
+    border: none;
+    border-radius: @radius.md@;
+    padding: 0 @font.xl@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    font-weight: 700;
+}
+QPushButton#DangerBtn:hover,
+QPushButton#FdActDanger:hover,
+QPushButton#BtnDelete:hover,
+QPushButton#BtnForceCheckout:hover {
+    background-color: @danger_hover@;
+}
+QPushButton#DangerBtn:pressed,
+QPushButton#FdActDanger:pressed,
+QPushButton#BtnDelete:pressed,
+QPushButton#BtnForceCheckout:pressed {
+    background-color: @danger_muted@;
+    padding-top: 1px;
+}
+QPushButton#DangerBtn:disabled,
+QPushButton#FdActDanger:disabled,
+QPushButton#BtnDelete:disabled,
+QPushButton#BtnForceCheckout:disabled {
+    background-color: @surface_alt@;
+    color: @text_muted@;
+}
+
+/* ────────── 专用场景按钮 ────────── */
+
+/* ── 支付方式平铺 — 见最终定义 §v7 末尾 */
+
+
+
+/* ── 其余专用按钮（CardActionBtn / LowFreqBtn 兼容旧 objectName）── */
+QPushButton#CardActionBtn {
+    background-color: @primary_hover@;
+    color: @surface@;
+    font-weight: bold;
+    border: none;
+    border-radius: @radius.md@;
+    padding: 0 @font.sm@;
+    min-height: 3@radius.sm@;
+    font-size: @font.sm@;
+}
+QPushButton#CardActionBtn:hover {
+    background-color: @primary@;
+}
+QPushButton#CardActionBtn:disabled {
+    background-color: @surface_alt@;
+    color: @text_muted@;
+}
+
+/* LoginRoleBtn 第一版已废弃 — 见登录页 v7 最终定义 */
+
+/* ── 财务页日常支出快捷登记 ── */
+QPushButton#FinanceQuickExpenseBtn {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    min-height: 52px;
+    font-weight: 600;
+    color: @text@;
+    padding: 0 @radius.md@;
+}
+QPushButton#FinanceQuickExpenseBtn:hover {
+    background-color: @selected_bg@;
+    border-color: @primary@;
+    color: @primary@;
+}
+QPushButton#FinanceQuickExpenseBtn:pressed {
+    padding-top: 1px;
+    background-color: @bg@;
+}
+QPushButton#FinanceQuickExpenseBtn:disabled {
+    background-color: @surface@;
+    color: @text_dim@;
+    border-color: @border@;
+}
+
+
+/* 紧凑输入框 — surface 浮卡底 + 2px 边框（全站筛选条/财务流水） */
+QLineEdit#FdCompactInput, QComboBox#FdCompactCombo, QDoubleSpinBox#FdCompactSpin {
+    background-color: @surface@;
+    color: @text@;
+    border: 2px solid @border@;
+    border-radius: @radius.md@;
+    padding: 0 @font.xs@;
+    min-height: 2@radius.md@;
+    max-height: 2@radius.md@;
+}
+QComboBox#FdCompactCombo {
+    padding-right: @font.2xl@;
+}
+QComboBox#FdCompactCombo::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: center right;
+    width: 22px;
+    border: none;
+    background-color: transparent;
+}
+QComboBox#FdCompactCombo::down-arrow {
+    width: 0;
+    height: 0;
+    border: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: @radius.sm@ solid @text_muted@;
+    margin-right: @radius.sm@;
+}
+QLineEdit#FdCompactInput:hover, QComboBox#FdCompactCombo:hover {
+    border-color: @text_muted@;
+}
+QLineEdit#FdCompactInput:focus, QComboBox#FdCompactCombo:focus {
+    border: 2px solid @accent@;
+    padding: 0 9px;
+}
+QComboBox#FdCompactCombo:focus {
+    padding-right: 25px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 11. 表格系统 — 极致去线框化
+ * 收银数据井/合计条/底栏交班 → 由 frontdesk_ui.fd_apply_* palette 硬设色，勿只靠本段 QSS
+ * ═══════════════════════════════════════════════════════════════ */
+QTableWidget, QTableView {
+    border: none;
+    background-color: @surface@;
+    gridline-color: @border@;
+    alternate-background-color: @bg@;
+}
+QHeaderView {
+    border: none;
+    background-color: @bg@;
+}
+QTableWidget::item {
+    padding: @radius.md@ @font.sm@;
+    border-bottom: 1px solid @border@;
+    color: @text@;
+}
+
+/* 表格左上角按钮 — 与表头统一颜色 */
+QTableCornerButton::section {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+}
+
+/* 表格视口 — 跟随表格背景 */
+QTableWidget::viewport, QTableView::viewport {
+    background-color: @surface@;
+}
+QFrame#DataTableShell QTableWidget,
+QFrame#DataTableShell QTableView,
+QFrame#DataTableShell QTableWidget::viewport,
+QFrame#DataTableShell QTableView::viewport {
+    background-color: @surface@;
+    alternate-background-color: @surface@;
+}
+
+/* 表格焦点 — 消除默认 OS 黑框 */
+QTableWidget::item:focus, QTableView::item:focus { outline: none; }
+QTableWidget:focus, QTableView:focus { outline: none; }
+
+/* 收银台合计条 — 与 tier/明细同色贴底，无 margin 防露 L2 surface 缝 */
+QFrame#FdCheckinPanel QFrame#FdTotalsStrip {
+    background-color: @bg@;
+    border: none;
+    border-top: 1px solid @border@;
+    border-radius: 0 0 @radius.md@ 0;
+    margin: 0;
+    min-height: 52px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+ * 12. 流程状态 / 房卡 / 命令面板 / 子菜单导航
+ * ═══════════════════════════════════════════════════════════════ */
+
+QListWidget#CardlockNavList {
+    background-color: transparent;
+    border: none;
+    padding: 4px 0;
+}
+QListWidget#CardlockNavList::item {
+    padding: 9px @radius.md@;
+    border-radius: @radius.md@;
+    font-size: @font.md@;
+    color: @text_muted@;
+    background-color: transparent;
+}
+QListWidget#CardlockNavList::item:hover {
+    background-color: @bg@;
+    color: @text@;
+}
+QListWidget#CardlockNavList::item:selected {
+    background-color: @primary@;
+    color: @surface@;
+    font-weight: 700;
+}
+QListWidget#CardlockNavList::item:disabled {
+    color: @text_dim@;
+}
+
+QFrame#RoomCard {
+    background-color: @bg@;
+    border: none;
+    border-radius: @font.sm@;
+}
+QWidget#RoomCardBody {
+    background-color: transparent;
+}
+QDialog#CommandPalette {
+    background-color: @bg@;
+    border: none;
+    border-radius: @font.sm@;
+}
+QListWidget#CommandPaletteList::item:selected {
+    background-color: @bg@;
+}
+QListWidget#CommandPaletteList::item:hover {
+    background-color: @selected_bg@;
+    border-radius: @radius.sm@;
+}
+
+
+QTreeWidget#SettingsNavTree {
+    background-color: @bg@;
+    border-right: 1px solid @border@;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    outline: 0;
+    padding: @font.xs@ 0 @radius.md@ 0;
+    font-size: @font.md@;
+}
+QTreeWidget#SettingsNavTree::item {
+    padding: 7px @font.xs@;
+    color: @text@;
+    font-size: @font.md@;
+}
+QTreeWidget#SettingsNavTree::item:has-children {
+    color: @text_muted@;
+    font-size: @font.xs@;
+    letter-spacing: 1px;
+    padding-top: @font.xs@;
+    padding-bottom: 4px;
+    background-color: transparent;
+}
+QTreeWidget#SettingsNavTree::item:selected {
+    background-color: @selected_bg@;
+    color: @text@;
+    font-weight: 700;
+    border-radius: @radius.sm@;
+}
+QTreeWidget#SettingsNavTree::item:selected:active,
+QTreeWidget#SettingsNavTree::item:selected:!active {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+QTreeWidget#SettingsNavTree::branch:selected,
+QTreeWidget#SettingsNavTree::branch:has-children:selected {
+    background-color: @selected_bg@;
+}
+QTreeWidget#SettingsNavTree::item:hover:!selected {
+    background-color: @bg@;
+    color: @text@;
+    border-radius: @radius.sm@;
+}
+QTreeWidget#SettingsNavTree::branch:has-siblings:!adjoins-item,
+QTreeWidget#SettingsNavTree::branch:has-siblings:adjoins-item,
+QTreeWidget#SettingsNavTree::branch:!has-children:!has-siblings:adjoins-item {
+    background-color: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 14. 日期时间 / 对账卡片
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * 15. 空状态 — 柔和引导，不做视觉抢眼
+ * ═══════════════════════════════════════════════════════════════ */
+QFrame#MatrixEmptyState {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @font.sm@;
+}
+QLabel#MatrixEmptyTitle {
+    font-size: 15px;
+    font-weight: 500;
+    color: @text_muted@;
+}
+QLabel#MatrixEmptyHint {
+    font-size: @font.sm@;
+    color: @text_dim@;
+    background-color: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 16. 迁移向导
+ * ═══════════════════════════════════════════════════════════════ */
+QGroupBox#MigrationGuidePanel::title {
+    color: @primary@;
+}
+QLabel#MigrationGuideProgress {
+    color: @amount_positive@;
+    font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 17. Staff 空状态卡片
+ * ═══════════════════════════════════════════════════════════════ */
+QFrame#FinanceStatCell, QFrame#StaffEmptyCard {
+    background-color: @bg@;
+    border: none;
+    border-radius: @font.sm@;
+    padding: @font.md@;
+}
+
+/* G07: KPI 三级视觉层级 ─────────────────────────────────────────
+   primary   = 今日三项（最大权重，突出显示）
+   secondary = 本月两项（中等权重）
+   tertiary  = 押金/资金池（辅助显示）
+   ────────────────────────────────────────────────────────────── */
+QFrame#FinanceStatCell[kpi_group="primary"] {
+    background-color: @elevated@;
+    border: 1px solid @gold_thread@;
+    border-radius: @font.sm@;
+    padding: @font.lg@ 1@radius.md@;
+}
+QFrame#FinanceStatCell[kpi_group="primary"] QLabel#FdMutedLabel {
+    font-size: @font.sm@;
+    font-weight: 600;
+    color: @text_muted@;
+}
+QFrame#FinanceStatCell[kpi_group="primary"] QLabel {
+    font-size: @font.xl@;
+    font-weight: 800;
+}
+QFrame#FinanceStatCell[kpi_group="secondary"] {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @font.sm@;
+    padding: @font.md@ @font.lg@;
+}
+QFrame#FinanceStatCell[kpi_group="secondary"] QLabel {
+    font-size: @font.lg@;
+    font-weight: 700;
+}
+QFrame#FinanceStatCell[kpi_group="tertiary"] {
+    background-color: @bg@;
+    border: none;
+    border-radius: @font.sm@;
+    padding: @font.sm@ @font.md@;
+    opacity: 0.92;
+}
+QFrame#FinanceStatCell[kpi_group="tertiary"] QLabel {
+    font-size: @font.md@;
+    font-weight: 600;
+    color: @text_muted@;
+}
+
+/* G08: 表格空状态占位（无数据时显示）─────────────────────────── */
+QTableWidget[emptyState="true"] {
+    background-color: @bg@;
+    border: 1px dashed @border@;
+    border-radius: @radius.md@;
+}
+QLabel#TableEmptyHint {
+    font-size: @font.md@;
+    color: @text_dim@;
+    background-color: transparent;
+    qproperty-alignment: AlignCenter;
+}
+
+QFrame#StaffEmptyCard {
+    border-style: dashed;
+}
+QLabel#StaffEmptyIcon {
+    font-size: 4@radius.md@;
+    background-color: transparent;
+}
+QLabel#StaffEmptyTitle {
+    font-size: 1@radius.md@;
+    font-weight: 700;
+    color: @text@;
+    background-color: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 18. 审计报告
+ * ═══════════════════════════════════════════════════════════════ */
+QTextEdit#NightAuditReport {
+    background-color: @surface@;
+    border: none;
+    border-radius: @radius.md@;
+    font-family: "Consolas", "Microsoft YaHei UI", monospace;
+    font-size: @font.sm@;
+    color: @text@;
+}
+QLabel#AuditOverviewCard {
+    background-color: @bg@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @font.md@ @font.lg@;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+ * §A. 业务语义
+ * ════════════════════════════════════════════════════════════════ */
+
+/* §A.1 负金额 */
+QLabel#FdAmountNegative {
+    color: @danger@;
+    font-weight: 700;
+    background-color: transparent;
+}
+
+/* §A.2 库存预警行 */
+QTableWidget::item[stockLow="true"] {
+    background-color: @bg@;
+    color: @danger@;
+}
+
+/* §A.3 会员等级徽标 */
+QLabel#MemberLevelBronze,
+QLabel#MemberLevelSilver,
+QLabel#MemberLevelGold {
+    color: @surface@;
+    border-radius: @font.sm@;
+    padding: 2px @font.xs@;
+    font-weight: 600;
+    font-size: @font.sm@;
+}
+QLabel#MemberLevelBronze  { background: @accent@; }
+QLabel#MemberLevelSilver  { background: @text_muted@; }
+QLabel#MemberLevelGold    { background: @accent@; }
+QLabel#MemberLevelDiamond { background: @primary@; }
+
+/* §A.5 审计三色阶 */
+QLabel#AuditSafe,
+QLabel#AuditCaution {
+    background-color: @bg@;
+    border-radius: @radius.md@;
+    padding: 3px @font.xs@;
+    font-weight: 600;
+}
+QLabel#AuditSafe    { color: @amount_positive@; }
+QLabel#AuditCaution { color: @accent@; }
+QLabel#AuditDanger  { color: @danger@; }
+
+/* ════════════════════════════════════════════════════════════════
+ * §B 微交互
+ * ════════════════════════════════════════════════════════════════ */
+
+/* §B.5 表格行 — 更柔和的 hover（item 基础定义已合并到行1359） */
+QTableWidget::item:hover {
+    background-color: @selected_bg@;
+}
+
+/* §B.7 输入框 — 与 QComboBox 同源实底（禁止 gradient 双轨） */
+QLineEdit, QSpinBox, QDoubleSpinBox {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 7px @font.sm@;
+    font-size: @font.md@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+}
+QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover {
+    border: 1px solid @text_muted@;
+}
+/* focus 定义已合并到 §29（行3031），此处删除 */
+QLineEdit:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled {
+    background-color: @bg@;
+    color: @text_dim@;
+    border-color: @border@;
+}
+QLineEdit[invalid="true"] {
+    border: 2px solid @danger@;
+    padding: @radius.sm@ 11px;
+}
+QLineEdit[readOnly="true"] {
+    background-color: @bg@;
+    color: @text_muted@;
+    border-color: @border@;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+ * §C 系统设置 & 厂家控制台页 — 画布背景
+ * ════════════════════════════════════════════════════════════════ */
+QWidget#SystemConsolePage,
+QWidget#VendorConsolePage {
+    background-color: @bg@;
+}
+
+/* 厂家控制台 — 压平嵌套边框，避免金线/灰框叠多层 */
+QWidget#VendorConsolePage QTabWidget#VendorConsoleSubTabs::pane {
+    border: none;
+    background-color: @bg@;
+    top: 0;
+}
+QWidget#VendorConsolePage QTabWidget#VendorConsoleSubTabs QTabBar::tab:selected {
+    border-bottom: 3px solid @accent@;
+}
+QWidget#VendorConsolePage QGroupBox#VendorGroup {
+    background-color: @surface@;
+    border: none;
+    border-top: 1px solid @border@;
+    border-radius: 0;
+    margin-top: @font.md@;
+    padding: @font.lg@ 0 @radius.md@ 0;
+    font-weight: 700;
+}
+QWidget#VendorConsolePage QGroupBox#VendorGroup::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 0;
+    padding: 0 @radius.sm@ 0 0;
+    color: @text@;
+}
+QWidget#VendorConsolePage QFrame#VendorStatRow {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    margin: 4px 0;
+    padding: 2px 4px;
+}
+QWidget#VendorConsolePage QFrame#VendorStatRow QLabel#VendorStatLabel {
+    color: @text@;
+    font-weight: 600;
+    font-size: @font.sm@;
+}
+QWidget#VendorConsolePage QFrame#VendorStatRow QLabel#VendorStatValue {
+    font-weight: 700;
+    font-family: Consolas, monospace;
+}
+QWidget#VendorConsolePage QPlainTextEdit#VendorConsoleMono {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    font-family: Consolas, monospace;
+    font-size: @font.xs@;
+}
+QWidget#VendorConsolePage QPlainTextEdit#VendorConsoleLog {
+    background-color: @sidebar@;
+    color: @text_dim@;
+    border: none;
+    border-top: 1px solid @border@;
+    font-family: Consolas, monospace;
+    font-size: @font.xs@;
+}
+QWidget#VendorConsolePage QScrollArea#VendorConsoleScroll {
+    border: none;
+    background-color: @bg@;
+}
+
+/* 厂家维护弹窗 — 单层 Tab + 压平卡片边框 */
+QDialog#ManufacturerDebugDialog {
+    background-color: @bg@;
+}
+QDialog#ManufacturerDebugDialog QTabWidget::pane {
+    border: none;
+    background-color: @bg@;
+    top: 0;
+}
+QDialog#ManufacturerDebugDialog QFrame#DialogHeader {
+    border: none;
+    border-bottom: 1px solid @border@;
+    border-radius: 0;
+    background-color: @surface@;
+}
+QDialog#ManufacturerDebugDialog QFrame#ManufacturerStatRow {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    border-radius: 0;
+}
+QDialog#ManufacturerDebugDialog QPlainTextEdit#ManufacturerLog {
+    background-color: @sidebar@;
+    color: @text_dim@;
+    border: none;
+    border-top: 1px solid @border@;
+    font-family: Consolas, monospace;
+    font-size: @font.xs@;
+}
+
+/* 统一房间管理页 */
+QWidget#UnifiedRoomPage {
+    background-color: @bg@;
+}
+
+/* 员工管理 / 门卡系统页画布 */
+QWidget#StaffTab,
+QWidget#CardSystemRoot {
+    background-color: @bg@;
+}
+
+/* 入住收银 — 与全站 L0–L3 同色；轨道/卡片设色见 ui_surface + 末段 CASHIER-FINAL */
+QWidget#FdCheckinRoot {
+    background-color: @bg@;
+}
+/* FdCard / 数据井边框与金线 — 仅 ui_surface.fd_apply_* 设色，此处不写 border 以免盖掉 inline 金线 */
+QFrame#FdCheckinPanel QFrame#FdSectionBar {
+    border: none;
+    border-radius: 0;
+}
+/* FdCheckinPanel 内 StickyFooter 由 ui_surface.fd_apply_sticky_footer 内联设色，此处不再定义 */
+QFrame#FdCheckinPanel QLineEdit#FdCompactInput,
+QFrame#FdCheckinPanel QComboBox#FdCompactCombo,
+QFrame#FdCheckinPanel QDoubleSpinBox#FdCompactSpin,
+QFrame#FdCheckinPanel QLineEdit#FdAmountInput {
+    background-color: @surface@;
+    border: 1px solid @border@;
+}
+/* FdCheckinPanel 内 AuxBar 由 ui_surface.fd_apply_aux_bar 内联设色 + CASHIER-FINAL L3929 收束，此处删除旧定义 */
+QFrame#FdCheckinPanel QScrollArea > QWidget#qt_scrollarea_viewport {
+    background-color: @bg@;
+}
+
+/* 门卡表格内层 — 与 ContentBox 同色 */
+QSplitter#CardSystemSplit::handle {
+    background-color: @border@;
+    width: 4px;
+}
+
+/* 门卡页 — 与 ContentBox 同色 surface_alt，消除 surface/bg_container 拼贴 */
+QLabel#CardReadUid {
+    font-weight: bold;
+    color: @text_dim@;
+    padding: @radius.md@ @font.sm@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    background-color: @surface@;
+    min-width: 180px;
+}
+QLabel#CardReadUid[state="ok"] {
+    color: @primary@;
+    border-color: @primary@;
+}
+QLabel#CardReadUid[state="error"] {
+    color: @danger@;
+    border-color: @danger@;
+}
+QFrame#PanelHLine {
+    background-color: @border@;
+    max-height: 1px;
+    margin: 4px 0;
+}
+QLabel#DangerNote {
+    color: @danger@;
+    font-weight: bold;
+}
+QWidget#CardSystemRoot QLabel#MetricCardValue {
+    background-color: transparent;
+}
+QWidget#CardSystemRoot QLabel#MetricCardValue[tone="primary"] { color: @primary@; }
+QWidget#CardSystemRoot QLabel#MetricCardValue[tone="amount_positive"] { color: @amount_positive@; }
+QWidget#CardSystemRoot QLabel#MetricCardValue[tone="accent"] { color: @accent@; }
+QWidget#CardSystemRoot QLabel#MetricCardValue[tone="text_muted"] { color: @text_muted@; }
+QLineEdit#CardSearchInput {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: @radius.sm@ @font.xs@;
+    font-size: @font.md@;
+}
+QLineEdit#CardSearchInput:focus {
+    border-color: @primary@;
+}
+QPushButton#CardFilterChip {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @font.sm@;
+    padding: 4px @font.sm@;
+    font-size: @font.xs@;
+    color: @text_muted@;
+}
+QPushButton#CardFilterChip:checked {
+    background-color: @primary@;
+    color: @surface@;
+    border-color: @primary@;
+    font-weight: 600;
+}
+QPushButton#CardFilterChip:hover:!checked {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+QTableWidget#CardRegistryTable {
+    background-color: transparent;
+    border: none;
+    font-size: @font.sm@;
+}
+QTableWidget#CardRegistryTable::viewport {
+    background-color: transparent;
+}
+QTableWidget#CardRegistryTable::item {
+    padding: 4px @radius.md@;
+}
+
+/* 员工表格 — 底色由 DataTableShell / 全局 L3 规则统一 */
+QTableWidget#StaffTable {
+    background-color: transparent;
+    border: none;
+    gridline-color: @border@;
+    font-size: @font.md@;
+}
+QTableWidget#StaffTable::viewport {
+    background-color: transparent;
+}
+QTableWidget#StaffTable::item {
+    padding: 4px @radius.md@;
+    color: @text@;
+}
+QTableWidget#StaffTable::item:selected {
+    background-color: @accent@;
+    color: @text@;
+}
+
+/* ContentBox — L2 surface + 左金线（PRD 四层：L0 画布 / L2 面板 / L3 表井） */
+
+/* 酒店总览 — 画布底色 */
+QWidget#OverviewScrollBody {
+    background-color: @bg@;
+}
+
+QLabel#DashboardMutedText {
+    color: @text_muted@;
+    font-size: @font.sm@;
+    background-color: transparent;
+}
+
+/* ── 低库存预警横幅 ── */
+QFrame#FdAlertBanner {
+    background-color: @surface@;
+    border-left: 3px solid @gold_thread@;
+    border-radius: @radius.sm@;
+    min-height: 34px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * QTabWidget 下划线指示器风格（§7a）
+ * ═══════════════════════════════════════════════════════════════ */
+QTabWidget::pane {
+    border: none;
+    background-color: @bg@;
+    top: 0;
+}
+QTabBar::tab {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: @radius.md@ @font.xl@;
+    font-weight: 600;
+    color: @text_muted@;
+    min-height: 3@radius.sm@;
+    margin-right: 2px;
+}
+QTabBar::tab:selected {
+    background-color: transparent;
+    color: @primary@;
+    border-bottom: 3px solid @accent@;
+}
+QTabBar::tab:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+
+/* 定价页子 Tab — 浅底，选中仅下划线 */
+QTabWidget#PricingSubTabs::pane {
+    background-color: @bg@;
+    border: none;
+    top: 0;
+}
+QTabWidget#PricingSubTabs QTabBar::tab {
+    background-color: @bg@;
+    color: @text_muted@;
+    border-bottom: 3px solid transparent;
+}
+QTabWidget#PricingSubTabs QTabBar::tab:selected {
+    background-color: @bg@;
+    color: @primary@;
+    font-weight: 700;
+    border-bottom: 3px solid @accent@;
+}
+QTabWidget#PricingSubTabs QTabBar::tab:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+
+QLabel#MemberLevelHint,
+QLabel#NightAuditStatus {
+    color: @text_muted@;
+    font-size: @font.sm@;
+    background-color: transparent;
+}
+QLabel#BatchCountLabel {
+    color: @primary@;
+    font-weight: 700;
+    font-size: @font.md@;
+    background-color: transparent;
+}
+QWidget#MatrixScrollContainer,
+QScrollArea#MatrixScroll,
+QScrollArea#MatrixScroll > QWidget > QWidget {
+    background-color: @bg@;
+    border: none;
+}
+
+QFrame#RitualBody {
+    background-color: @surface@;
+    border-bottom-left-radius: @font.xs@;
+    border-bottom-right-radius: @font.xs@;
+}
+QFrame#RitualAnimationBox {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @font.lg@;
+    min-height: 2@font.xl@;
+}
+QLabel#RitualTitle {
+    color: @text@;
+    font-size: 1@radius.md@;
+    font-weight: 700;
+    background-color: transparent;
+    padding: 4px @font.sm@;
+}
+QLabel#RitualSubtitle {
+    color: @text_muted@;
+    font-size: @font.md@;
+    background-color: transparent;
+    padding: 2px @font.sm@;
+}
+QLabel#RitualHint {
+    color: @text_dim@;
+    font-size: @font.sm@;
+    background-color: transparent;
+    padding: 2px @font.sm@;
+}
+QProgressBar#RitualProgress {
+    background-color: @border@;
+    border: none;
+    border-radius: 3px;
+    min-height: @radius.sm@;
+    max-height: @radius.sm@;
+}
+QProgressBar#RitualProgress::chunk {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 @accent@, stop:0.5 @primary@, stop:1 @accent@);
+    border-radius: 3px;
+}
+QWidget#SystemConsolePage QLineEdit,
+QWidget#SystemConsolePage QComboBox,
+QWidget#SystemConsolePage QSpinBox,
+QWidget#SystemConsolePage QDoubleSpinBox,
+QWidget#SystemConsolePage QTimeEdit {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@ @font.xs@;
+    min-height: 32px;
+}
+QWidget#SystemConsolePage QComboBox:hover,
+QWidget#SystemConsolePage QLineEdit:hover {
+    border-color: @text_muted@;
+}
+QWidget#SystemConsolePage QComboBox::drop-down {
+    border: none;
+    border-left: 1px solid @border@;
+    width: @font.xl@;
+}
+
+QFrame#RitualFormCard {
+    background-color: transparent;
+    border: none;
+}
+QFrame#RitualFormCard QLineEdit,
+QFrame#RitualFormCard QSpinBox,
+QFrame#RitualFormCard QDateTimeEdit,
+QFrame#RitualFormCard QComboBox {
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@ @font.xs@;
+    background-color: @surface@;
+    color: @text@;
+    min-height: 32px;
+}
+QFrame#RitualFormCard QLineEdit:read-only {
+    background-color: @bg@;
+    color: @text_muted@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 20. 下拉弹出框样式
+ * ═══════════════════════════════════════════════════════════════ */
+QComboBox {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: @radius.sm@ @font.xs@;
+    min-height: 32px;
+}
+QComboBox:hover {
+    border-color: @text_muted@;
+}
+QComboBox:focus {
+    border: 2px solid @accent@;
+    padding: 5px 9px;
+}
+QComboBox::drop-down {
+    border: none;
+    border-left: 1px solid @border@;
+    width: @font.xl@;
+}
+QComboBox QAbstractItemView {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: 4px;
+    outline: none;
+    selection-background-color: @selected_bg@;
+    selection-color: @text@;
+}
+QComboBox QAbstractItemView::viewport {
+    background-color: @bg@;
+}
+QComboBox QAbstractItemView::item {
+    background-color: transparent;
+    padding: 7px @font.sm@;
+    border-radius: @radius.sm@;
+    min-height: @font.2xl@;
+}
+QComboBox QAbstractItemView::item:hover {
+    background-color: @bg@;
+}
+QComboBox QAbstractItemView::item:selected {
+    background-color: @selected_bg@;
+    color: @text@;
+    border-left: 3px solid @gold_thread@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 21. QTableWidget::item:selected — 淡色高亮，勿与主按钮同色
+ * ═══════════════════════════════════════════════════════════════ */
+QTableWidget#FdLedgerTable::item:selected,
+QTableWidget#FdFolioTable::item:selected {
+    background-color: @primary_30pct@;
+    color: @text@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 22. QSpinBox / QDoubleSpinBox 上下箭头
+ * ═══════════════════════════════════════════════════════════════ */
+QSpinBox::up-button, QDoubleSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    border-left: 1px solid @border@;
+    border-bottom: 1px solid @border@;
+    border-top-right-radius: @radius.md@;
+    background-color: @bg@;
+    width: 22px;
+}
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    border-left: 1px solid @border@;
+    border-bottom-right-radius: @radius.md@;
+    background-color: @bg@;
+    width: 22px;
+}
+QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover,
+QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover {
+    background-color: @border@;
+}
+QSpinBox::up-button:pressed, QDoubleSpinBox::up-button:pressed,
+QSpinBox::down-button:pressed, QDoubleSpinBox::down-button:pressed {
+    background-color: @text_dim@;
+}
+QSpinBox::up-arrow, QDoubleSpinBox::up-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid @text_muted@;
+    width: 0;
+    height: 0;
+}
+QSpinBox::down-arrow, QDoubleSpinBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid @text_muted@;
+    width: 0;
+    height: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 23. QDateTimeEdit 日历 popup 样式
+ * ═══════════════════════════════════════════════════════════════ */
+QDateTimeEdit QAbstractItemView {
+    background-color: @bg@;
+    border: none;
+    border-radius: @radius.md@;
+    selection-background-color: @selected_bg@;
+    selection-color: @text@;
+}
+QCalendarWidget QAbstractItemView:enabled {
+    background-color: @surface@;
+    color: @text@;
+    selection-background-color: @selected_bg@;
+    selection-color: @text@;
+}
+QCalendarWidget QAbstractItemView:disabled {
+    color: @text_dim@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 24. QMenu 分隔线 / 子菜单箭头 / 圆角
+ * ═══════════════════════════════════════════════════════════════ */
+QMenu {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@ 4px;
+}
+QMenu::item {
+    padding: 7px 30px 7px @font.md@;
+    border-radius: @radius.sm@;
+    min-width: 130px;
+}
+QMenu::item:selected {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+QMenu::item:disabled {
+    color: @text_muted@;
+}
+QMenu::separator {
+    height: 1px;
+    background-color: @surface_alt@;
+    margin: 4px @radius.md@;
+}
+QMenu::right-arrow {
+    image: none;
+    border-left: 4px solid @text_muted@;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    margin-right: @radius.sm@;
+}
+QMenu::indicator {
+    width: @font.md@;
+    height: @font.md@;
+    margin-left: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 25. QToolTip
+ * ═══════════════════════════════════════════════════════════════ */
+QToolTip {
+    background-color: @tooltip_bg@;
+    color: @tooltip_fg@;
+    border: 1px solid @tooltip_bg@;
+    border-radius: @radius.md@;
+    padding: 5px @font.xs@;
+    font-size: @font.sm@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 26. 滚动条
+ * ═══════════════════════════════════════════════════════════════ */
+QScrollBar:vertical {
+    background-color: transparent;
+    width: @radius.sm@;
+    margin: 2px 0;
+    border-radius: @radius.sm@;
+}
+QScrollBar::handle:vertical {
+    background-color: @border@;
+    min-height: 30px;
+    border-radius: @radius.sm@;
+}
+QScrollBar::handle:vertical:hover {
+    background-color: @text_dim@;
+}
+QScrollBar::handle:vertical:pressed {
+    background-color: @text_muted@;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0;
+    background-color: none;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background-color: none;
+}
+
+QScrollBar:horizontal {
+    background-color: transparent;
+    height: @radius.sm@;
+    margin: 0 2px;
+    border-radius: @radius.sm@;
+}
+QScrollBar::handle:horizontal {
+    background-color: @border@;
+    min-width: 30px;
+    border-radius: @radius.sm@;
+}
+QScrollBar::handle:horizontal:hover {
+    background-color: @text_dim@;
+}
+QScrollBar::handle:horizontal:pressed {
+    background-color: @text_muted@;
+}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0;
+    background-color: none;
+}
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background-color: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 27. :disabled 全控件统一样式
+ * ═══════════════════════════════════════════════════════════════ */
+QWidget:disabled {
+    color: @text_muted@;
+}
+QPushButton:disabled {
+    background-color: @surface_alt@;
+    color: @text_muted@;
+    border-color: @border@;
+}
+QLineEdit:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled,
+QComboBox:disabled, QDateTimeEdit:disabled {
+    background-color: @surface_alt@;
+    color: @text_muted@;
+    border-color: @border@;
+}
+QComboBox:disabled {
+    color: @text_muted@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 28. 前台 CASHIER POLISH 组件
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* 卡片 — 实底/边框由 ui_surface + 末位 CASHIER-VISIBLE 兜底，此处不写 background/border */
+QFrame#FdQuickActions {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    min-height: 80px;
+}
+
+/* 金线品牌横栏 — 左金线由 FdGoldLine 子控件承担；ContentBox 内由外框金线承担时隐藏子金线 */
+QFrame#FdSectionBar {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    border-radius: 0;
+}
+QFrame#FdGoldLine {
+    background-color: @gold_thread@;
+    border: none;
+    border-radius: 2px;
+}
+QLabel#FdSectionBarTitle {
+    font-size: @font.md@;
+    font-weight: 700;
+    color: @primary@;
+    background-color: transparent;
+}
+/* 财务辅助表格：操作员统计/对账/支出分类 */
+QFrame#FdReconcileGroup {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.md@;
+}
+QTableWidget#FinanceOpSummaryTable,
+QTableWidget#FinanceCatTable,
+QTableWidget#FinanceReconcileTable {
+    border: none;
+    font-size: @font.sm@;
+}
+QLabel#EnergyDashCell {
+    font-size: @font.md@;
+    font-weight: bold;
+    color: @primary@;
+    padding: @radius.md@;
+    background-color: @bg@;
+    border-radius: @radius.md@;
+}
+QLabel#HkTemplateBox {
+    background-color: @bg@;
+    padding: @font.xs@;
+    border-radius: @radius.md@;
+    color: @text_muted@;
+}
+QLabel#TgStatusLabel {
+    background-color: @bg@;
+    color: @amount_positive@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @font.xs@ @font.sm@;
+    font-size: @font.sm@;
+}
+QLabel#InventoryDiffBanner {
+    padding: @font.md@ 1@radius.md@;
+    border-radius: @radius.md@;
+    font-size: @font.md@;
+    font-weight: 600;
+}
+QLabel#InventoryDiffBanner[tone="ok"] {
+    background-color: @primary@;
+    color: @surface@;
+}
+QLabel#InventoryDiffBanner[tone="warn"] {
+    background-color: @danger@;
+    color: @surface@;
+}
+QLabel#InventoryDiffBanner[tone="overdue"] {
+    background-color: @danger@;
+    color: @surface@;
+}
+QPlainTextEdit#InventoryTimeline {
+    background-color: @sidebar@;
+    color: @text_dim@;
+    padding: @radius.md@;
+    border: none;
+    border-radius: @radius.sm@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 门卡系统 — 指标卡片 / 操作面板
+ * ═══════════════════════════════════════════════════════════════ */
+QFrame#MetricCard {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.md@ @font.md@;
+}
+QWidget#CardSystemRoot QFrame#MetricCard {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.md@ @font.md@;
+}
+QFrame#MetricCard[highlighted="true"] {
+    border: 2px solid @primary@;
+}
+QFrame#MetricCard:hover {
+    border-color: @accent@;
+}
+QFrame#MetricCard QLabel {
+    background-color: transparent;
+}
+QFrame#ActionPanel {
+    background-color: @bg@;
+    border: none;
+    border-right: 1px solid @border@;
+    border-radius: 0;
+    padding: @radius.md@;
+    min-width: 16@radius.md@;
+    max-width: 200px;
+}
+
+/* 分区标题：大写字体，专业感 */
+QLabel#FdSectionTitle {
+    font-size: @font.sm@;
+    font-weight: 700;
+    color: @text_muted@;
+    letter-spacing: 1.5px;
+    background-color: transparent;
+    padding: 4px 0 2px 0;
+}
+
+/* ── 仪表板日志标签 (HubWidget dash) ── */
+QLabel#DashLogLabel {
+    font-size: @font.xs@;
+    color: @text_muted@;
+    background-color: transparent;
+    padding: 0 4px;
+}
+
+/* ── 登录页品牌标志容器 ── */
+QWidget#LoginBrandMark {
+    background-color: transparent;
+}
+
+/* ── 登录页错误标签 ── */
+QLabel#LoginErrorLabel {
+    color: @error@;
+    font-size: @font.sm@;
+    background-color: transparent;
+}
+
+/* ── 角色头像 Emoji 标签 ── */
+QLabel#RoleAvatarLabel {
+    background-color: transparent;
+    font-size: 1@radius.md@;
+}
+
+/* ── 厂家激活卡片 ── */
+QFrame#InfoCard {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @font.sm@;
+}
+
+/* ── 设置向导步骤点阵 ── */
+QWidget#StepDots {
+    background-color: transparent;
+}
+
+QLabel#StepDot {
+    background-color: transparent;
+    font-size: @font.sm@;
+    color: @text_dim@;
+    padding: 0;
+    margin: 0;
+}
+
+QLabel#StepDot:hover {
+    color: @accent@;
+}
+
+/* 金额：视觉锚点，放大醒目 */
+QLabel#FdTotalLabel, QLabel#FdAmountPrimary {
+    font-size: 24px;
+    font-weight: 800;
+    color: @amount_positive@;
+    background-color: transparent;
+}
+/* FdAmountPositive / FdRoomBanner 定义已合并到 §FD（行3396+3405），此处删除此行 */
+
+/* 信息条：透明 + 左边线，勿铺黄/灰底块 */
+QLabel#FdInfoBanner {
+    color: @text@;
+    background-color: transparent;
+    border: 1px solid @border@;
+    border-left: 3px solid @primary@;
+    border-radius: 0;
+    padding: @font.xs@ @font.md@;
+    font-size: @font.sm@;
+}
+
+/* 流程步骤条 */
+QLabel[flowState="pending"] {
+    color: @text_dim@;
+    font-weight: 500;
+}
+QLabel[flowState="current"] {
+    color: @primary@;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+QLabel[flowState="done"] {
+    color: @amount_positive@;
+    font-weight: 600;
+}
+
+/* ══ 新版 SOP 流程条 (FrontdeskFlowStrip) ══ */
+QFrame#FrontdeskFlowStrip {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+}
+QWidget#FdFlowStep { background: transparent; }
+/* 流水记录容器 */
+QFrame#FrontdeskLedgerStrip {
+    background-color: @bg@;
+    border-left: 3px solid @gold_thread@;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    border-radius: 0;
+}
+/* 门卡管理中心 — 标题栏 / 指标行（CardSystemRoot 内已覆盖，此处兜底） */
+QFrame#MetricsRow {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    border-radius: 0;
+    padding: @radius.sm@;
+}
+QTableWidget#FdLedgerTable {
+    background-color: @surface@;
+    border: none;
+    gridline-color: @border@;
+    alternate-background-color: @surface@;
+}
+QTableWidget#FdLedgerTable::viewport {
+    background-color: @surface@;
+}
+/* Pending 徽标 */
+QLabel#PendingBadge {
+    border-radius: @font.sm@;
+    padding: 3px @font.sm@;
+    font-size: @font.xs@;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* 面板分隔 */
+QFrame#FdPanelSep {
+    background-color: @border@;
+    min-height: 1px;
+    max-height: 1px;
+}
+QFrame#FdColSep {
+    background-color: @border@;
+    min-width: 1px;
+    max-width: 1px;
+}
+
+/* ── 头像按钮 ── */
+QToolButton#TopAvatarInner {
+    background-color: @bg@;
+    border: none;
+    border-radius: @font.lg@;
+    min-width: 32px;
+    min-height: 32px;
+}
+QToolButton#TopAvatarInner:hover {
+    background-color: @bg@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 29. 焦点聚焦环 — 金线边框，键盘导航可见
+ * ═══════════════════════════════════════════════════════════════ */
+/* 按钮焦点 — 金线贴边，不改 padding（避免光圈缩小） */
+
+/* 复选框/单选框 — 消除虚线黑框 */
+QCheckBox:focus, QRadioButton:focus { outline: none; }
+QPushButton#CardTableActionBtn {
+    background-color: @bg@;
+    border: 2px solid @border@;
+    border-radius: 4px;
+    padding: 0;
+    min-height: 0;
+    max-height: none;
+}
+QPushButton#CardTableActionBtn:hover {
+    background-color: @selected_bg@;
+    border-color: @text_muted@;
+}
+QPushButton#CardTableActionBtn:focus {
+    border: 2px solid @gold_thread@;
+}
+QCheckBox:focus, QRadioButton:focus {
+    color: @text@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 30. 房间/房型管理专用组件
+ * ═══════════════════════════════════════════════════════════════ */
+QFrame#TypeCard {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: 4px;
+    min-width: 140px;
+    min-height: 9@radius.sm@;
+}
+QFrame#TypeCard:hover {
+    border-color: @primary@;
+    background-color: @surface@;
+}
+QFrame#TypeCard[selected="true"] {
+    border-color: @primary@;
+    border-width: 2px;
+}
+QFrame#TypeStripContainer {
+    background-color: @bg@;
+    border: none;
+    border-left: 3px solid @gold_thread@;
+    border-radius: 0;
+    padding: @radius.md@;
+}
+/* 左侧导航面板 */
+QFrame#NavPanelContainer {
+    background-color: @bg@;
+    border: none;
+    border-right: 1px solid @border@;
+    border-radius: 0;
+    padding: 4px;
+}
+QTreeWidget#RoomNavTree {
+    background-color: @bg@;
+    border: none;
+    border-radius: 0;
+    padding: 4px;
+}
+QTreeWidget#RoomNavTree::item {
+    padding: 4px @radius.sm@;
+    border-radius: 4px;
+}
+QTreeWidget#RoomNavTree::item:selected {
+    background-color: @primary_20pct@;
+    color: @text@;
+}
+QTreeWidget#RoomNavTree::item:hover {
+    background-color: @selected_bg@;
+}
+QFrame#RoomPanelContainer {
+    background-color: @bg@;
+    border: none;
+    border-left: 3px solid @gold_thread@;
+    border-radius: 0;
+    padding: @radius.md@;
+}
+QScrollArea#TypeCardScroll {
+    background-color: @bg@;
+    border: none;
+    border-radius: 0;
+}
+QFrame#TypeCardRow {
+    background-color: @bg@;
+}
+/* 数据表格围栏 — L2 surface 框 + 内表 L3 bg_card（§1379） */
+QFrame#DataTableShell {
+    background-color: @surface@;
+    border: none;
+    border-left: 4px solid @gold_thread@;
+    border-radius: 0;
+    padding: 0;
+    min-height: 0;
+}
+/* 无外层金线容器时（收银台账单等）保留左金线 */
+/* QFrame#DataTableShell QTableWidget viewport 已由全局规则（§1351）覆盖 */
+QScrollArea#TypeCardScroll QScrollBar:horizontal {
+    height: @radius.sm@;
+}
+QLabel#TypeCardIcon { font-size: @font.xl@; }
+QLabel#TypeCardName {
+    font-size: @font.md@;
+    font-weight: 600;
+    color: @text@;
+}
+QLabel#TypeCardPrice {
+    font-size: @font.sm@;
+    color: @text_muted@;
+}
+QLabel#TypeCardCount {
+    font-size: @font.xs@;
+    font-weight: 500;
+    color: @primary@;
+}
+QLabel#TypeStripTitle {
+    font-size: @font.md@;
+    font-weight: 600;
+    color: @text@;
+}
+QLineEdit#RoomSearchInput {
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@ @font.sm@;
+    font-size: @font.md@;
+    background-color: @bg@;
+}
+QLineEdit#RoomSearchInput:focus {
+    border-color: @accent@;
+}
+QTableWidget#RoomTable {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    font-size: @font.sm@;
+}
+QTableWidget#RoomTable::viewport {
+    background-color: transparent;
+}
+QTableWidget#RoomTable::item {
+    padding: 5px @font.xs@;
+}
+/* 房态滚动区匿名子控件透底 — MatrixFilterBar/MatrixStatsStrip 见 §L1 条带 + Wave2 */
+/* 收银卡片内匿名子容器透底 — 防 Windows 默认画刷染黑 */
+QFrame#FdActionBar QWidget,
+QWidget#PaymentMethodTilesV4 QWidget,
+QWidget#PaymentMethodTiles QWidget { background: transparent; }
+QLabel#RoomCountLabel {
+    font-size: @font.sm@;
+    color: @text_muted@;
+}
+QLabel#EmptyStateTip {
+    color: @text_muted@;
+    padding: @font.lg@;
+    font-size: @font.md@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 31. 库存管理
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * 32. 进度条
+ * ═══════════════════════════════════════════════════════════════ */
+QProgressBar {
+    background-color: @border@;
+    border: none;
+    border-radius: 4px;
+    min-height: @radius.md@;
+    max-height: @radius.md@;
+    text-align: center;
+}
+QProgressBar::chunk {
+    background-color: @primary@;
+    border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 33. 复选框 / 单选框
+ * ═══════════════════════════════════════════════════════════════ */
+QCheckBox {
+    spacing: @radius.md@;
+    color: @text@;
+}
+QCheckBox::indicator {
+    width: @font.lg@;
+    height: @font.lg@;
+    border: 1px solid @border@;
+    border-radius: 4px;
+    background-color: @surface@;
+}
+QCheckBox::indicator:hover {
+    border-color: @primary@;
+}
+QCheckBox::indicator:checked {
+    background-color: @primary@;
+    border-color: @primary@;
+}
+QCheckBox::indicator:disabled {
+    border-color: @border@;
+    background-color: @surface_alt@;
+}
+QRadioButton {
+    spacing: @radius.md@;
+    color: @text@;
+}
+QRadioButton::indicator {
+    width: @font.lg@;
+    height: @font.lg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    background-color: @surface@;
+}
+QRadioButton::indicator:hover {
+    border-color: @primary@;
+}
+QRadioButton::indicator:checked {
+    background-color: @primary@;
+    border-color: @primary@;
+}
+QRadioButton::indicator:disabled {
+    border-color: @border@;
+    background-color: @surface_alt@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * 34. QPushButton[active="true"] 激活态（筛选/切换用）
+ * ═══════════════════════════════════════════════════════════════ */
+QPushButton:!objectName[active="true"] {
+    background-color: @primary@;
+    color: @surface@;
+    border: 1px solid @primary@;
+    border-radius: @radius.md@;
+    font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * §FD. 前台收银台专属样式（FdCard/FdSectionTitle/金额/金线/SectionBar 已迁至 §28）
+ *  独有: FdRoomBanner / FdPanelSep / FdAmountPositive / FdAmountInput
+ *        FdCardActionBtn / FdLowFreqBtn
+ *        FdToolbarPrimary / FdCompactInput / FdMutedLabel
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ── FdHDivider — 横幅下 2px 横线（palette 设色，QSS 作换主题回退）── */
+QFrame#FdHDivider {
+    background-color: @border@;
+    border: none;
+    min-height: 2px;
+    max-height: 2px;
+}
+
+/* ── FdRoomBanner — 房间横幅文字 ── */
+QLabel#FdRoomBanner {
+    font-size: @font.md@;
+    font-weight: 700;
+    color: @text@;
+    background-color: transparent;
+    letter-spacing: 0.3px;
+}
+
+/* ── FdAmountPositive — 已收金额正色 ── */
+QLabel#FdAmountPositive,
+QLabel#FdPaidAmount {
+    font-size: @font.xl@;
+    font-weight: 700;
+    color: @amount_positive@;
+    background-color: transparent;
+}
+QLabel#FdTotalAmount {
+    font-size: 2@radius.md@;
+    font-weight: 900;
+    color: @text@;
+    background-color: transparent;
+}
+
+/* ── FdAmountInput — 收款金额输入框（大号）── */
+QLineEdit#FdAmountInput {
+    background-color: @bg@;
+    color: @text@;
+    border: 2px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.md@ @font.md@;
+    font-size: @font.lg@;
+    font-weight: 700;
+    min-height: 4@radius.sm@;
+}
+QLineEdit#FdAmountInput:focus {
+    border: 2px solid @accent@;
+    background-color: @surface@;
+}
+QLineEdit#FdAmountInput:hover {
+    border-color: @text_muted@;
+}
+
+
+
+/* ── FdCardActionBtn — 卡片操作（发卡/退房/延住）── */
+QPushButton#FdCardActionBtn {
+    background-color: @primary_hover@;
+    color: @surface@;
+    border: 1px solid @primary_hover@;
+    border-radius: @radius.md@;
+    padding: 0 @font.md@;
+    min-height: 3@radius.sm@;
+    font-weight: 700;
+    font-size: @font.sm@;
+}
+QPushButton#FdCardActionBtn:hover {
+    background-color: @primary@;
+}
+QPushButton#FdCardActionBtn:pressed {
+    padding-top: 1px;
+    background-color: @primary@;
+}
+QPushButton#FdCardActionBtn:disabled {
+    background-color: @surface_alt@;
+    color: @text_muted@;
+}
+
+/* ── FdLowFreqBtn — 低频操作（换房/备注/打印）── */
+QPushButton#FdLowFreqBtn {
+    background-color: @accent@;
+    color: @text@;
+    border: none;
+    border-radius: @radius.sm@;
+    padding: 0 @font.xs@;
+    min-height: 2@radius.md@;
+    font-size: @font.xs@;
+    font-weight: 600;
+}
+QPushButton#FdLowFreqBtn:hover {
+    background-color: @primary_hover@;
+    color: @surface@;
+}
+QPushButton#FdLowFreqBtn:pressed {
+    padding-top: 1px;
+    background-color: @primary@;
+    color: @surface@;
+}
+QPushButton#FdLowFreqBtn:disabled {
+    background-color: @surface_alt@;
+    color: @text_muted@;
+}
+
+/* ── FdToolbarPrimary — 工具栏主按钮 ── */
+/* FdToolbarPrimary — 继承主按钮组 §3 样式（行783）；仅覆盖 padding/min-height */
+
+/* ── FdCompactInput / FdCompactCombo / FdCompactSpin 宽度放宽 ── */
+QLineEdit#FdCompactInput {
+    max-width: 9999px;
+}
+QComboBox#FdCompactCombo {
+    max-width: 9999px;
+}
+QDoubleSpinBox#FdCompactSpin, QSpinBox#FdCompactSpin {
+    max-width: 9999px;
+}
+
+/* FdMutedLabel 定义已合并到 §3（行703），此处删除 */
+QSplitter#FdCheckinVSplit {
+    background-color: @bg@;
+}
+QSplitter#FdCheckinVSplit::handle {
+    background-color: @bg@;
+    height: 0;
+    max-height: 0;
+    margin: 0;
+    border: none;
+}
+
+QSplitter#FdCheckinVSplit::handle:hover {
+    background-color: @accent@;
+}
+
+QFrame#FdCheckinTopPanel {
+    background-color: @bg@;
+}
+
+QFrame#FdCheckinBottomDock {
+    background-color: @bg@;
+    border: none;
+}
+
+QFrame#FrontdeskLedgerDock {
+    background-color: @surface@;
+    /* 左金线/边框见 ui_surface.fd_apply_ledger_dock */
+}
+QFrame#FrontdeskLedgerDock QFrame#FdSectionBar,
+QFrame#FdShiftDock QFrame#FdSectionBar {
+    background-color: @surface@;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+QFrame#FdLedgerFilterBar QPushButton#FdFilterChip {
+    background-color: @surface@;
+}
+
+QFrame#FdShiftDock {
+    background-color: @surface@;
+    /* 实底以 ui_surface.fd_apply_shift_dock 为准 */
+}
+
+QFrame#FdDockDivider {
+    background-color: @border@;
+    border: none;
+    min-width: 1px;
+    max-width: 1px;
+}
+
+/* 财务对账表内输入 — 勿用全局 34px 输入框高度，防浮起叠格 */
+QTableWidget#FinanceReconcileTable QLineEdit#FinanceReconcileInput,
+QTableWidget#FinanceOpSummaryTable QLineEdit,
+QTableWidget#FinanceCatTable QLineEdit,
+QTableWidget#FinanceReconcileTable QLineEdit {
+    min-height: @font.2xl@;
+    max-height: 2@radius.md@;
+    padding: 2px @radius.sm@;
+    border-radius: 4px;
+    font-size: @font.sm@;
+    background-color: @surface@;
+    border: 1px solid @border@;
+}
+
+/* 顶栏动态工具区 — 横向滚动，禁止压住下方迷你标签条 */
+QScrollArea#SmartHeaderCtxScroll {
+    background-color: transparent;
+    border: none;
+}
+QWidget#SmartHeaderCtxPanel {
+    background-color: transparent;
+}
+
+/* 搜索按钮 — L1 面板色 */
+QPushButton#HeaderSearchBtn {
+    background-color: @surface_alt@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    font-size: 13px;
+    color: @text_muted@;
+    min-width: 160px;
+    min-height: 32px;
+    max-height: 32px;
+}
+
+/* === 报表 KPI / OTA 页 — Sprint2 去 inline 背景 === */
+QWidget#ReportTab {
+    background-color: @bg@;
+}
+QFrame#ReportKpiCard {
+    background-color: @elevated@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: 4px;
+}
+QFrame#ReportKpiCard QLabel#ReportKpiTitle {
+    color: @text_muted@;
+    font-size: @font.sm@;
+    font-weight: 600;
+    background-color: transparent;
+}
+QFrame#ReportKpiCard QLabel#ReportKpiSub {
+    color: @text_dim@;
+    font-size: @font.xs@;
+    background-color: transparent;
+}
+QFrame#ReportKpiCard QLabel#ReportKpiValue {
+    font-size: 24px;
+    font-weight: bold;
+    background-color: transparent;
+}
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="primary"] { color: @primary@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="amount_positive"] { color: @amount_positive@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="danger"] { color: @danger@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="accent"] { color: @accent@; }
+
+QWidget#OTATab {
+    background-color: @bg@;
+}
+QLabel#OtaTodayBar {
+    background-color: @bg@;
+    color: @accent@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@ @font.sm@;
+    font-size: @font.sm@;
+}
+QLabel#OtaWebhookHint {
+    color: @text_muted@;
+    font-size: @font.xs@;
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.md@;
+}
+QPushButton#OtaWebhookBtn[running="false"] {
+    background-color: @amount_positive@;
+    color: @sidebar_text@;
+    border: none;
+}
+QPushButton#OtaWebhookBtn[running="true"] {
+    background-color: @danger@;
+    color: @sidebar_text@;
+    border: none;
+}
+
+/* === Wave2 MatrixStatsStrip — 跟随主题令牌 === */
+QWidget#MatrixStatsStrip {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+    min-height: 3@radius.sm@;
+}
+QLabel#MatrixStatCell {
+    font-size: @font.md@;
+    color: @text@;
+    padding: 0 @radius.md@;
+    background-color: transparent;
+}
+QLabel#MatrixStatCell[statKey="total"] {
+    font-weight: bold;
+    color: @primary@;
+}
+
+
+/* === Wave4 按键两档 === */
+
+/* 主按钮 — 40px 固定，深底暖白字，全站 ≤2/屏 */
+QPushButton#FdConfirmBtn {
+    background-color: @btn_anchor_bg@;
+    color: @btn_anchor_fg@;
+    border: 1px solid @btn_anchor_bg@;
+    border-radius: 4px;
+    padding: 0 @font.xl@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    font-size: @font.md@;
+    font-weight: 600;
+}
+QPushButton#FdConfirmBtn:hover { background-color: @member_enterprise@; }
+QPushButton#FdConfirmBtn:pressed { background-color: @btn_anchor_pressed_bg@; }
+QPushButton#FdConfirmBtn:disabled { background-color: @surface@; color: @text_muted@; }
+
+
+/* SmartHeader L1 实底 — 已在 §2 (§157) 定义，此处不再重复 */
+
+/* === DATA-WELLS-FINAL — 末位覆盖，专治「没颜色」透明穿透 === */
+/* 账单明细 — 标题条 + 数据井（卡片已有左金线，内井不再叠金线） */
+QFrame#FdBillFolioBlock {
+    background-color: @bg@;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+QFrame#FdBillSectionHead {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    border-radius: 0 @radius.sm@ 0 0;
+    margin: 0;
+    padding: 0;
+}
+QFrame#FdBillFolioShell {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-top: none;
+    border-left: none;
+    border-radius: 0 0 @radius.sm@ @radius.sm@;
+}
+QFrame#FdBillFolioShell QTableWidget,
+QFrame#FdBillFolioShell QTableWidget::viewport {
+    background-color: @surface@;
+    alternate-background-color: @surface@;
+}
+/* 流水 dock 内表格外壳 — 禁止任何边框（左金线仅 dock 外框一根） */
+QFrame#FrontdeskLedgerDock QFrame#DataTableShell {
+    border: none;
+    border-left: none;
+}
+/* 收银台卡片内旧 DataTableShell 选择器 — 账单已改 FdBillFolioShell，此处去金线防叠层 */
+/* FdTotalsStrip 仅收银台使用 — 规则见 §1405 FdCheckinPanel 内 */
+QWidget#VendorConsolePage QPlainTextEdit#VendorConsoleMono {
+    min-height: 72px;
+    color: @text_muted@;
+}
+
+/* === CASHIER-FINAL — 与全站 L0 bg_root / L2 surface / L3 bg_card 同源，仅布局选择器 === */
+QFrame#FdCheckinPanel {
+    background-color: @bg@;
+    border: none;
+    border-radius: 0;
+}
+QFrame#FdCheckinPanel QFrame#FrontdeskLedgerDock {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-left: 4px solid @gold_thread@;
+    border-right: none;
+}
+QFrame#FdCheckinBottomDock QFrame#FrontdeskLedgerDock,
+QFrame#FdCheckinBottomDock QFrame#FdShiftDock {
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+}
+QFrame#FdCheckinPanel QFrame#FdShiftDock {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-left: 1px solid @border@;
+    border-radius: 0 @radius.sm@ @radius.sm@ 0;
+}
+QFrame#FdCheckinBottomDock QFrame#FdShiftDock {
+    border-radius: 0;
+}
+QFrame#FdCheckinPanel QFrame#FdShiftDock QPlainTextEdit#FdShiftNotes {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: @radius.sm@;
+}
+QFrame#FdCheckinPanel QFrame#FdBillFolioBlock {
+    background-color: @bg@;
+}
+QFrame#FdCheckinPanel QFrame#FdActionBar {
+    border: none;
+    background-color: @surface@;
+    border-radius: 0;
+}
+QFrame#FdCheckinPanel QFrame#FdCheckinRightCardBody QFrame#FdActionBar {
+    background-color: @surface@;
+    border-top: 1px solid @border@;
+    border-radius: 0;
+}
+QFrame#FdCheckinPanel QFrame#FdBillTierRow {
+    background-color: @bg@;
+    border-top: 1px solid @border@;
+}
+QFrame#FdCheckinPanel QFrame#FdCheckinRightCardBody,
+QFrame#FdCheckinPanel QFrame#FdCheckinCardFill {
+    border: none;
+}
+QFrame#FdCheckinPanel QFrame#FdCheckinRightRail,
+QFrame#FdCheckinPanel QFrame#BillRail,
+QFrame#FdCheckinPanel QFrame#FdCheckinTopPanel {
+    background-color: @bg@;
+}
+QFrame#FdCheckinPanel QFrame#FrontdeskLedgerDock QFrame#FdSectionBar {
+    background-color: @bg@;
+}
+QFrame#FdCheckinPanel QFrame#FdShiftDock QFrame#FdSectionBar {
+    background-color: @surface@;
+}
+QFrame#FdCheckinPanel QFrame#FdLedgerFilterBar {
+    background-color: @bg@;
+}
+QFrame#FdCheckinPanel QFrame#FdCheckinBottomDock {
+    background-color: @bg@;
+}
+/* handle 已合并在 Wave2 段（行3579） */
+QWidget#PaymentMethodTiles {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+}
+/* — 住几晚 SpinBox — */
+QSpinBox#FdStayNights {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 2px @radius.sm@;
+    min-height: 30px;
+    max-height: 34px;
+    min-width: 50px;
+    max-width: 60px;
+    font-size: @font.md@;
+}
+QSpinBox#FdStayNights:focus {
+    border: 2px solid @accent@;
+}
+
+QLabel#FdRoomChargeEst {
+    font-size: @font.sm@;
+    color: @text_muted@;
+    padding: 0 @radius.md@;
+}
+
+/* ---- 共享主题规则 ---- */
+QApplication { background: @bg@; }
+
+QLabel#SidebarRoleLabel { color: @text_dim@; font-size: @font.xs@; padding: 4px @font.sm@; }
+
+/* ═══════════════════════════════════════════════════════════════
+ * v7 UI/UX REVAMP — 四时之色 + 三面亮色条 + 统一 3@radius.sm@ 按钮
+ * 追加在文件末尾，覆盖前面冲突规则（Qt QSS 后定义优先）
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* §v7.1 全局字体抗锯齿 + PC 端清晰度 */
+* {
+    font-family: "Microsoft YaHei UI", "PingFang SC", "Segoe UI", sans-serif;
+}
+
+/* §v7.2 模式色编码容器（UX 创新核心 — READY/INHOUSE 视觉区分）*/
+QWidget#FdCardGroupReady {
+    background-color: @selected_bg@;
+    border: none;
+    border-left: 3px solid @primary@;
+    border-radius: 0 @radius.md@ @radius.md@ 0;
+    padding: 4px @radius.md@;
+}
+QWidget#FdCardGroupReady QLabel#FdSectionTitle { color: @primary@; }
+QWidget#FdCardGroupInhouse {
+    background-color: @danger_7pct@;
+    border: none;
+    border-left: 3px solid @danger@;
+    border-radius: 0 @radius.md@ @radius.md@ 0;
+    padding: 4px @radius.md@;
+}
+QWidget#FdCardGroupInhouse QLabel#FdSectionTitle { color: @danger@; }
+
+/* §v7.3 KPI 卡片 — 三面亮渐隐色条 + 2@radius.md@ 大数字 + 数字点色 */
+/* 三面亮色条：顶部 2px 渐隐（中间实色→两端透明）+ 左右 1px 80% 色条 */
+
+QLabel#KpiLabel, QLabel#DashboardKPITitle {
+    font-size: 11px;
+    color: @text_muted@;
+    font-weight: 600;
+    letter-spacing: 0.@radius.md@;
+    background-color: transparent;
+}
+QLabel#KpiValue, QLabel#KPIValue {
+    font-size: 2@radius.md@;
+    font-weight: 700;
+    color: @text@;
+    letter-spacing: -0.5px;
+    background-color: transparent;
+}
+/* 数字点色 — 4 种 tone */
+QLabel#KpiValue[tone="primary"] { color: @primary@; }
+QLabel#KpiValue[tone="positive"] { color: @amount_positive@; }
+QLabel#KpiValue[tone="danger"] { color: @danger@; }
+QLabel#KpiValue[tone="accent"] { color: @accent@; }
+QLabel#KpiSub, QLabel#DashboardKPISub {
+    font-size: 11px;
+    color: @text_dim@;
+    background-color: transparent;
+}
+
+/* §v7.4 ContentBox 双色条 — 顶部 accent + 左侧 gold_thread */
+
+/* §v7.6 表头优化 — 大写小字 + 3@radius.sm@ 高 + 字距 0.@radius.md@ */
+
+/* §v7.7 选中行中性化 — 与主按钮拉开对比 */
+QTableWidget#FdFolioTable::item:selected,
+QTableWidget#FdLedgerTable::item:selected {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+
+/* §v7.8 focus 全局统一 — accent 色，不再 3 处冲突 */
+
+/* §v7.9 全站按钮统一 3@radius.sm@ — v7 核心规范（继承顶层定义） */
+/* 主按钮：主色实底白字 */
+QPushButton#SolidPrimaryBtn, QPushButton#FdToolbarPrimary,
+QPushButton#FdActPay, QPushButton#BtnSave, QPushButton#FdCardActionBtn {
+    background-color: @primary@;
+    color: @surface@;
+    border: 1px solid @primary@;
+}
+QPushButton#SolidPrimaryBtn:hover, QPushButton#FdToolbarPrimary:hover,
+QPushButton#FdActPay:hover, QPushButton#BtnSave:hover, QPushButton#FdCardActionBtn:hover {
+    background-color: @primary_hover@;
+    border-color: @primary_hover@;
+}
+/* 次按钮：surface_alt 底 + 主色字/边框 */
+QPushButton#FdActSecondary, QPushButton#SecondaryBtn,
+QPushButton#BtnExit, QPushButton#BtnVerify, QPushButton#FdQuickBtn {
+    background-color: @bg@;
+    color: @primary@;
+    border: 1.5px solid @primary@;
+}
+QPushButton#FdActSecondary:hover, QPushButton#SecondaryBtn:hover,
+QPushButton#BtnExit:hover, QPushButton#BtnVerify:hover, QPushButton#FdQuickBtn:hover {
+    background-color: @selected_bg@;
+}
+QPushButton#FdQuickBtn:pressed {
+    background-color: @primary_20pct@;
+    padding-top: 5px;
+}
+QPushButton#FdQuickBtn:disabled {
+    color: @text_muted@;
+    background-color: @surface_alt@;
+    border-color: @border@;
+}
+/* 幽灵按钮：浅底灰字 */
+QPushButton#FdGhostBtn, QPushButton#FdToolbarGhost,
+QPushButton#ShiftActionBtn, QPushButton#FdLowFreqBtn {
+    background-color: transparent;
+    color: @text_muted@;
+    border: 1px solid @bg@;
+}
+QPushButton#FdGhostBtn:hover, QPushButton#FdToolbarGhost:hover,
+QPushButton#ShiftActionBtn:hover, QPushButton#FdLowFreqBtn:hover {
+    background-color: @primary@;
+    color: @surface@;
+    border-color: @primary@;
+}
+/* 危险按钮：红色实底白字 */
+QPushButton#FdDangerBtn, QPushButton#FdActDanger,
+QPushButton#CardActionBtnDanger, QPushButton#BatchDangerBtn {
+    background-color: @danger@;
+    color: @surface@;
+    border: 1px solid @danger@;
+}
+QPushButton#FdDangerBtn:hover, QPushButton#FdActDanger:hover,
+QPushButton#CardActionBtnDanger:hover, QPushButton#BatchDangerBtn:hover {
+    background-color: @danger_hover@;
+    border-color: @danger_hover@;
+}
+
+/* §v7.10 FdCommitBtn — v7 统一 3@radius.sm@（不再 52px） */
+QPushButton#FdCommitBtn {
+    background-color: @primary@;
+    color: @surface@;
+    border: 1px solid @primary@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    padding: 0 24px;
+    font-weight: 700;
+    font-size: @font.md@;
+    border-radius: @radius.md@;
+}
+QPushButton#FdCommitBtn:hover {
+    background-color: @primary_hover@;
+    border-color: @primary_hover@;
+}
+
+/* §v7.11 FdAmountInput — 44px 大号金额锚点 */
+QLineEdit#FdAmountInput {
+    background-color: @surface@;
+    color: @text@;
+    border: 2px solid @border@;
+    border-radius: @radius.md@;
+    padding: 0 @font.lg@;
+    font-size: 1@radius.md@;
+    font-weight: 700;
+    min-height: 44px;
+    max-height: 44px;
+}
+QLineEdit#FdAmountInput:hover { border-color: @text_muted@; }
+QLineEdit#FdAmountInput:focus { border: 2px solid @accent@; }
+
+/* §v7.12 房态矩阵统计带 — emoji + 大字号 */
+QWidget#MatrixStatsStrip {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+    min-height: 40px;
+}
+QLabel#MatrixStatCell {
+    font-size: 13px;
+    color: @text@;
+    padding: @radius.sm@ @font.sm@;
+    background-color: transparent;
+}
+QLabel#MatrixStatCell[statKey="total"] {
+    font-weight: 700;
+    color: @primary@;
+    font-size: @font.md@;
+}
+
+/* §v7.13 房态图例条 */
+QWidget#MatrixLegendStrip {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+}
+
+/* §v7.14 FdPanelBanner — 金线锚点（金线 3 处之一）*/
+
+/* §v7.15 FdCardGroup 内 FdActionBar 透明 */
+QWidget#FdCardGroupReady QFrame#FdActionBar,
+QWidget#FdCardGroupInhouse QFrame#FdActionBar {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+/* §v7.16 标准输入框三档 */
+QLineEdit#FdStandardInput, QComboBox#FdStandardCombo {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 0 @font.sm@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.md@;
+    font-size: 13px;
+}
+QLineEdit#FdStandardInput:focus, QComboBox#FdStandardCombo:focus {
+    border: 2px solid @accent@;
+    padding: 0 11px;
+}
+
+/* §v7.17 酒店总览欢迎条 */
+QFrame#WelcomeStrip {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-top: 2px solid @accent@;
+    border-left: 1px solid @accent@;
+    border-right: 1px solid @accent@;
+    border-radius: @radius.md@;
+}
+
+/* §v7.18 风险告警项 */
+QFrame#AlertItem {
+    background-color: @bg@;
+    border: none;
+    border-left: 3px solid @text_muted@;
+    border-radius: @radius.sm@;
+}
+
+/* §v7.19 待办事项项 */
+QFrame#TodoItem {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+}
+QFrame#TodoItem:hover { border-color: @primary@; }
+
+/* §v7.20 房态快照行 */
+QFrame#RoomSnapRow { background: transparent; }
+
+/* §v7.21 卡片柔和浮起 — 轻微阴影层次 */
+
+/* §v7.22 侧栏 active 左色条 — accent 指示 */
+
+
+/* §v7.23 QTabBar 下划线 — accent 色 */
+QTabBar::tab:selected {
+    border-bottom: 2px solid @accent@;
+    color: @primary@;
+}
+
+/* §v7.24 FilterChip — 统一 3@radius.sm@ 高度 */
+QPushButton#FilterChip {
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    padding: 0 @font.md@;
+    border-radius: @radius.sm@;
+    font-size: @font.sm@;
+    font-weight: 500;
+}
+QPushButton#FilterChip:checked {
+    background-color: @primary@;
+    color: @surface@;
+    border-color: @primary@;
+}
+
+/* PayMethodTile 尺寸统一 — 由 v8 定义覆盖 */
+
+/* §v7.26 表格行 hover — 柔和 */
+QTableWidget::item:hover {
+    background-color: @selected_bg@;
+}
+
+/* §v7.27 滚动条 — @radius.md@ 极细 + 圆角 */
+QScrollBar:vertical {
+    background-color: transparent;
+    width: @radius.md@;
+    border-radius: @radius.md@;
+}
+QScrollBar::handle:vertical {
+    background-color: @border@;
+    min-height: 32px;
+    border-radius: @radius.md@;
+}
+QScrollBar::handle:vertical:hover { background: @text_dim@; }
+
+QScrollBar:horizontal {
+    background-color: transparent;
+    height: @radius.md@;
+    border-radius: @radius.md@;
+}
+QScrollBar::handle:horizontal {
+    background-color: @border@;
+    min-width: 32px;
+    border-radius: @radius.md@;
+}
+
+/* §v7.28 QMenu — 圆角 + 柔和浮起 */
+QMenu {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@;
+}
+QMenu::item {
+    padding: @radius.md@ @font.md@;
+    border-radius: @radius.sm@;
+    min-height: 24px;
+}
+QMenu::item:selected {
+    background-color: @primary@;
+    color: @surface@;
+}
+
+/* §v7.30 QToolTip — 圆角 */
+QToolTip {
+    background-color: @tooltip_bg@;
+    color: @tooltip_fg@;
+    border: 1px solid @tooltip_bg@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@ @font.sm@;
+    font-size: @font.sm@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * v7 END
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * v7.1 全站视觉收口 — 让 47 个老页面自动获得 v7 视觉
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* §v7.1.1 登录页 v7 重设计 */
+QWidget#LoginBrandMark {
+    background-color: transparent;
+    padding: @font.xl@ 0 @font.lg@ 0;
+}
+QLabel#LoginBrandIcon {
+    font-size: 4@radius.md@;
+    background-color: transparent;
+}
+QLabel#LoginBrandText {
+    font-size: 1@radius.md@;
+    font-weight: 700;
+    color: @primary@;
+    letter-spacing: 2px;
+    background-color: transparent;
+    padding: @radius.md@ 0 4px 0;
+}
+QLabel#LoginRoleCaption {
+    font-size: @font.sm@;
+    font-weight: 600;
+    color: @text_muted@;
+    background-color: transparent;
+}
+/* LoginRoleBtn 中间版已废弃 — :checked 已合并至末尾 v7 定义 */
+QLabel#LoginErrorLabel {
+    color: @danger@;
+    font-size: @font.sm@;
+    font-weight: 600;
+    background-color: transparent;
+    padding: 4px 0;
+}
+
+/* §v7.1.2 全局弹窗标题 — v7 规范 */
+QFrame#DialogHeader {
+    background-color: @surface@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    border-top-left-radius: @font.sm@;
+    border-top-right-radius: @font.sm@;
+    padding: @font.lg@ @font.xl@;
+    min-height: 5@radius.sm@;
+}
+QLabel#DialogTitle {
+    font-size: @font.lg@;
+    font-weight: 700;
+    color: @text@;
+    background-color: transparent;
+}
+QLabel#DialogSubtitle {
+    font-size: @font.sm@;
+    color: @text_muted@;
+    background-color: transparent;
+    margin-top: 2px;
+}
+/* 弹窗按钮统一 3@radius.sm@ */
+QDialogButtonBox QPushButton {
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    padding: 0 @font.xl@;
+    border-radius: @radius.sm@;
+    font-weight: 600;
+}
+
+/* §v7.1.3 全局 QFrame 卡片样式收口 */
+QFrame#ContentBox,
+QFrame#FdCard,
+QFrame#Card,
+QFrame#MetricCard,
+QFrame#InfoCard,
+QFrame#TypeCard,
+QFrame#StaffEmptyCard,
+QFrame#RoomCard,
+QFrame#DashSnapCell {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+}
+
+/* KPI 数据卡片 — 独立 elevated 色（④） */
+QFrame#DashKpiCard,
+QFrame#ReportKpiCard,
+QFrame#FinanceStatCell {
+    background-color: @elevated@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+}
+
+/* v7.5 总览卡片 — accent 顶部 + 左侧色条 + gold_thread 底部金线 */
+QFrame#OverviewSectionCard {
+    background-color: @elevated@;
+    border: 1px solid @border@;
+    border-top: 2px solid @accent@;
+    border-left: 1px solid @accent@;
+    border-right: 1px solid @accent@;
+    border-radius: @radius.md@;
+}
+QFrame#KpiCard {
+    background-color: @elevated@;
+    border: 1px solid @border@;
+    border-top: 2px solid @primary@;
+    border-left: 1px solid @primary@;
+    border-right: 1px solid @primary@;
+    border-radius: @radius.md@;
+}
+
+/* §v7.1.4 全局表格表头统一 v7 */
+QTableWidget, QTableView {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    gridline-color: @border@;
+    alternate-background-color: @surface@;
+}
+QHeaderView::section {
+    background-color: @bg@;
+    color: @text_muted@;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.@radius.md@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    padding: 9px @font.sm@;
+    min-height: 3@radius.sm@;
+}
+QTableWidget::item {
+    padding: @radius.md@ @font.sm@;
+    border-bottom: 1px solid @border@;
+    color: @text@;
+}
+QTableWidget::item:hover {
+    background-color: @selected_bg@;
+}
+QTableWidget::item:selected {
+    background-color: @selected_bg@;
+    color: @text@;
+    border-left: 2px solid @accent@;
+}
+
+/* §v7.1.5 全局输入框统一 v7 */
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit, QPlainTextEdit {
+    background-color: @surface@;
+    color: @text@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 7px @font.sm@;
+    font-size: 13px;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.md@;
+    selection-background-color: @primary@;
+    selection-color: @surface@;
+}
+QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover, QComboBox:hover {
+    border-color: @text_muted@;
+}
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus,
+QTextEdit:focus, QPlainTextEdit:focus {
+    border: 2px solid @accent@;
+    padding: @radius.sm@ 11px;
+}
+QLineEdit:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled, QComboBox:disabled {
+    background-color: @bg@;
+    color: @text_dim@;
+    border-color: @border@;
+}
+QLineEdit[readOnly="true"] {
+    background-color: @bg@;
+    color: @text_muted@;
+}
+
+/* §v7.1.6 QComboBox 下拉 */
+QComboBox::drop-down {
+    border: none;
+    border-left: 1px solid @border@;
+    width: 22px;
+}
+QComboBox QAbstractItemView {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: 4px;
+    selection-background-color: @primary@;
+    selection-color: @surface@;
+}
+QComboBox QAbstractItemView::viewport {
+    background-color: @bg@;
+}
+QComboBox QAbstractItemView::item {
+    background-color: transparent;
+    padding: @radius.md@ @font.sm@;
+    border-radius: @radius.sm@;
+    min-height: 2@radius.md@;
+}
+
+/* §v7.1.7 全局按钮兜底 v7 — 继承顶层 QPushButton 定义 */
+
+/* §v7.1.8 侧栏导航 v7 — 44px 高 + 左色条 active */
+QFrame#NavBtnFrame {
+    background-color: transparent;
+    border: none;
+    border-left: 3px solid transparent;
+    border-radius: 0;
+    min-height: 44px;
+    max-height: 44px;
+    padding: 0 @font.sm@;
+}
+QFrame#NavBtnFrame:hover {
+    background-color: rgba(200,214,227,0.10);
+}
+QFrame#NavBtnFrame[active="true"] {
+    background-color: @primary_20pct@;
+    border-left: 3px solid @accent@;
+}
+QLabel#NavBtnText {
+    font-size: 13px;
+    font-weight: 500;
+    background-color: transparent;
+}
+QLabel#NavBtnIcon {
+    font-size: 1@radius.md@;
+    background-color: transparent;
+}
+QFrame#NavBtnFrame[active="true"] QLabel#NavBtnText {
+    color: @surface@;
+    font-weight: 700;
+}
+QFrame#NavBtnFrame[active="true"] QLabel#NavBtnIcon {
+    color: @accent@;
+}
+QLabel#SidebarGroupLabel {
+    font-size: @font.xs@;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.40);
+    padding: @font.md@ @font.md@ @radius.sm@ @font.md@;
+    background-color: transparent;
+}
+
+/* §v7.1.9 顶栏 v7 — 4@radius.md@ + 品牌色 */
+QWidget#SmartHeader, QFrame#SmartHeader {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    min-height: 4@radius.md@;
+    max-height: 4@radius.md@;
+}
+QLabel#TopBarBrand {
+    font-size: @font.md@;
+    font-weight: 700;
+    color: @primary@;
+    letter-spacing: 1px;
+    background-color: transparent;
+}
+QPushButton#HamburgerBtn {
+    background-color: @bg@;
+    border: none;
+    border-radius: @radius.sm@;
+    font-size: 1@radius.md@;
+    color: @text_muted@;
+    min-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+}
+QPushButton#HamburgerBtn:hover {
+    background-color: @bg@;
+    color: @text@;
+}
+QPushButton#HeaderSearchBtn {
+    background-color: @surface_alt@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    font-size: 13px;
+    color: @text_muted@;
+    min-width: 160px;
+    min-height: 32px;
+    max-height: 32px;
+    padding: 0 @font.sm@;
+    text-align: left;
+}
+QPushButton#HeaderSearchBtn:hover {
+    background-color: @surface_alt@;
+    border-color: @primary@;
+    color: @text@;
+}
+QLabel#HeaderCurrentOp {
+    color: @text_muted@;
+    font-size: @font.sm@;
+    font-weight: 500;
+    background-color: transparent;
+}
+
+/* §v7.1.10 迷你标签条 v7 */
+QPushButton#MiniTabButton {
+    background-color: @surface_alt@;
+    border: 1px solid transparent;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: @radius.md@ @font.lg@;
+    font-size: @font.sm@;
+    font-weight: 500;
+    color: @text_muted@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+}
+QPushButton#MiniTabButton:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+QPushButton#MiniTabButton[active="true"] {
+    color: @primary@;
+    font-weight: 700;
+    border-bottom: 2px solid @accent@;
+}
+
+/* §v7.1.11 状态栏 v7 */
+QFrame#EnhancedStatusBar, QWidget#StatusBar {
+    background-color: @bg@;
+    border-top: 1px solid @border@;
+    color: @text_muted@;
+    font-size: @font.sm@;
+    min-height: 2@radius.md@;
+    max-height: 32px;
+    padding: 0 @font.lg@;
+}
+
+/* §v7.1.12 筛选芯片 v7 — 统一 3@radius.sm@ */
+QPushButton#FilterChip,
+QPushButton#FdFilterChip,
+QPushButton#CardFilterChip {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @font.lg@;
+    padding: 0 @font.md@;
+    min-height: 32px;
+    max-height: 3@radius.sm@;
+    font-size: @font.sm@;
+    font-weight: 500;
+    color: @text_muted@;
+}
+QPushButton#FilterChip:hover,
+QPushButton#FdFilterChip:hover,
+QPushButton#CardFilterChip:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+    border-color: @text_muted@;
+}
+QPushButton#FilterChip:checked,
+QPushButton#FdFilterChip[active="true"],
+QPushButton#CardFilterChip:checked {
+    background-color: @primary@;
+    color: @surface@;
+    border-color: @primary@;
+    font-weight: 600;
+}
+
+/* §v7.1.13 进度条 v7 */
+QProgressBar {
+    background-color: @bg@;
+    border: none;
+    border-radius: 4px;
+    min-height: @radius.sm@;
+    max-height: @radius.md@;
+    text-align: center;
+}
+QProgressBar::chunk {
+    background-color: @primary@;
+    border-radius: 4px;
+}
+
+/* §v7.1.14 复选框/单选框 v7 */
+QCheckBox, QRadioButton {
+    color: @text@;
+    spacing: @radius.md@;
+    font-size: 13px;
+}
+QCheckBox::indicator, QRadioButton::indicator {
+    width: @font.lg@;
+    height: @font.lg@;
+    border: 1px solid @border@;
+    background-color: @surface@;
+}
+QCheckBox::indicator {
+    border-radius: 4px;
+}
+QRadioButton::indicator {
+    border-radius: @radius.md@;
+}
+QCheckBox::indicator:hover, QRadioButton::indicator:hover {
+    border-color: @primary@;
+}
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: @primary@;
+    border-color: @primary@;
+}
+
+/* §v7.1.15 QGroupBox v7 */
+QGroupBox {
+    background-color: transparent;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    margin-top: @font.lg@;
+    padding: @font.md@;
+    font-weight: 600;
+    font-size: 13px;
+    color: @text@;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: @font.sm@;
+    padding: 0 @radius.md@;
+    color: @text_muted@;
+}
+
+/* §v7.1.16 滚动条 v7 — @radius.md@ 极细 */
+QScrollBar:vertical {
+    background-color: transparent;
+    width: @radius.md@;
+    margin: 2px 0;
+    border-radius: @radius.md@;
+}
+QScrollBar::handle:vertical {
+    background-color: @border@;
+    min-height: 32px;
+    border-radius: @radius.md@;
+}
+QScrollBar::handle:vertical:hover {
+    background-color: @text_dim@;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0;
+    background-color: none;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background-color: none;
+}
+QScrollBar:horizontal {
+    background-color: transparent;
+    height: @radius.md@;
+    margin: 0 2px;
+    border-radius: @radius.md@;
+}
+QScrollBar::handle:horizontal {
+    background-color: @border@;
+    min-width: 32px;
+    border-radius: @radius.md@;
+}
+QScrollBar::handle:horizontal:hover {
+    background-color: @text_dim@;
+}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0;
+    background-color: none;
+}
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background-color: none;
+}
+
+/* §v7.1.17 QTabWidget v7 — 下划线指示器 */
+QTabWidget::pane {
+    border: none;
+    background-color: @bg@;
+    top: 0;
+}
+QTabBar::tab {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: @radius.md@ @font.xl@;
+    font-weight: 600;
+    font-size: 13px;
+    color: @text_muted@;
+    min-height: 3@radius.sm@;
+    margin-right: 2px;
+}
+QTabBar::tab:selected {
+    background-color: transparent;
+    color: @primary@;
+    border-bottom: 2px solid @accent@;
+}
+QTabBar::tab:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+
+/* §v7.1.18 QMenu v7 — 圆角 + 柔和 */
+QMenu {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@;
+}
+QMenu::item {
+    padding: @radius.md@ @font.md@;
+    border-radius: @radius.sm@;
+    min-height: 2@radius.md@;
+    min-width: 140px;
+}
+QMenu::item:selected {
+    background-color: @primary@;
+    color: @surface@;
+}
+QMenu::separator {
+    height: 1px;
+    background-color: @surface_alt@;
+    margin: 4px @radius.md@;
+}
+
+/* §v7.1.19 QToolTip v7 */
+QToolTip {
+    background-color: @tooltip_bg@;
+    color: @tooltip_fg@;
+    border: 1px solid @tooltip_bg@;
+    border-radius: @radius.md@;
+    padding: @radius.sm@ @font.sm@;
+    font-size: @font.sm@;
+}
+
+/* §v7.1.20 QToolButton v7 — 继承顶层 QToolButton 定义 */
+
+/* §v7.1.21 SetupWizard v7 — 启动向导 */
+QFrame#SetupWizardHeader {
+    background-color: @surface@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    border-top-left-radius: @font.sm@;
+    border-top-right-radius: @font.sm@;
+    padding: 24px 32px;
+    min-height: 80px;
+}
+QLabel#SetupWizardTitle {
+    font-size: @font.xl@;
+    font-weight: 700;
+    color: @text@;
+    background-color: transparent;
+}
+QLabel#SetupWizardSubtitle {
+    font-size: 13px;
+    color: @text_muted@;
+    background-color: transparent;
+    margin-top: 4px;
+}
+
+/* §v7.1.22 财务/库存/报表等管理页统一 v7 */
+QFrame#PanelContainer,
+QFrame#WorkspacePage,
+QFrame#PanelGroupBox {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.md@;
+}
+
+/* §v7.1.23 会员等级徽标 v7 */
+QLabel#MemberLevelBronze, QLabel#MemberLevelSilver,
+QLabel#MemberLevelGold, QLabel#MemberLevelDiamond {
+    color: @surface@;
+    border-radius: @font.sm@;
+    padding: 3px @font.sm@;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+QLabel#MemberLevelBronze    { background: @member_bronze@; }
+QLabel#MemberLevelSilver    { background: @member_silver@; }
+QLabel#MemberLevelGold      { background: @room_reserved@; }
+QLabel#MemberLevelDiamond   { background: @primary@; }
+
+/* §v7.1.24 状态徽标 v7 */
+QLabel#BadgeSuccess, QLabel#BadgeWarn, QLabel#BadgeError, QLabel#BadgeInfo {
+    background-color: @surface@;
+    border-radius: @radius.md@;
+    padding: 3px @font.xs@;
+    font-size: 11px;
+    font-weight: 600;
+}
+QLabel#BadgeSuccess { color: @amount_positive@; border: 1px solid @amount_positive@; }
+QLabel#BadgeWarn    { color: @accent@;          border: 1px solid @accent@; }
+QLabel#BadgeError   { color: @danger@;          border: 1px solid @danger@; }
+QLabel#BadgeInfo    { color: @text_muted@;      border: 1px solid @text_muted@; }
+
+/* §v7.1.25 房态矩阵统计带 v7 */
+QWidget#MatrixStatsStrip {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+    min-height: 40px;
+}
+QLabel#MatrixStatCell {
+    font-size: 13px;
+    color: @text@;
+    padding: @radius.sm@ @font.sm@;
+    background-color: transparent;
+}
+QLabel#MatrixStatCell[statKey="total"] {
+    font-weight: 700;
+    color: @primary@;
+    font-size: @font.md@;
+}
+
+/* §v7.1.26 房态矩阵筛选条 v7 */
+QFrame#MatrixFilterBar, QFrame#FrontdeskDashStrip {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+    min-height: 4@radius.md@;
+}
+
+/* §v7.1.27 收银台 v7 收口 */
+QFrame#FdCheckinPanel {
+    background-color: @bg@;
+    border: none;
+    border-radius: 0;
+}
+QFrame#FdPanelBanner {
+    background-color: @surface@;
+    border: none;
+    border-left: 3px solid @gold_thread@;
+    border-bottom: 1px solid @border@;
+    min-height: 44px;
+}
+QFrame#FdCard, QFrame#Card {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+}
+QFrame#FdTotalsStrip {
+    background-color: @bg@;
+    border-top: 1px solid @border@;
+    border-radius: 0 0 @radius.md@ 0;
+    min-height: 52px;
+}
+QFrame#FrontdeskLedgerStrip {
+    background-color: @bg@;
+    border-left: 3px solid @gold_thread@;
+}
+
+/* §v7.1.28 卡片系统页 v7 */
+QFrame#CardSystemHeader, QFrame#MetricsRow {
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: 0;
+    padding: @radius.md@ @font.sm@;
+}
+QFrame#MetricCard {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @radius.md@ @font.md@;
+}
+QFrame#MetricCard[highlighted="true"] {
+    border: 2px solid @primary@;
+}
+
+/* §v7.1.29 设置页 v7 */
+QTreeWidget#SettingsNavTree {
+    background-color: @bg@;
+    border: none;
+    border-right: 1px solid @border@;
+    outline: 0;
+    padding: @font.xs@ 0;
+    font-size: 13px;
+}
+QTreeWidget#SettingsNavTree::item {
+    padding: @radius.md@ @font.sm@;
+    color: @text@;
+}
+QTreeWidget#SettingsNavTree::item:selected {
+    background-color: @selected_bg@;
+    color: @primary@;
+    font-weight: 700;
+}
+QTreeWidget#SettingsNavTree::item:hover:!selected {
+    background-color: @bg@;
+    color: @text@;
+}
+
+/* §v7.1.30 空状态 v7 */
+QFrame#MatrixEmptyState {
+    background-color: @surface@;
+    border: 1px dashed @border@;
+    border-radius: @font.sm@;
+}
+QLabel#MatrixEmptyTitle {
+    font-size: @font.lg@;
+    font-weight: 600;
+    color: @text_muted@;
+}
+QLabel#MatrixEmptyHint {
+    font-size: @font.sm@;
+    color: @text_dim@;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * v7.1 END — 全站视觉收口完成
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * v7.2 登录页四时之色入口 — 左品牌+右表单
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* 登录对话框主体 — v7.2 版本（最新，覆盖前面 v7.1.2 的通用 QDialog 定义） */
+QDialog#LoginDialog {
+    background-color: @surface@;
+    border-radius: @font.lg@;
+}
+QFrame#LoginBrandPanel {
+    background-color: @sidebar@;
+    border-top-left-radius: @font.lg@;
+    border-bottom-left-radius: @font.lg@;
+}
+QLabel#LoginBrandIcon {
+    font-size: 5@radius.sm@;
+    background-color: transparent;
+}
+QLabel#LoginBrandName {
+    font-size: 24px;
+    font-weight: 700;
+    color: @surface@;
+    letter-spacing: 1px;
+    background-color: transparent;
+    padding: @radius.md@ 0 4px 0;
+}
+QLabel#LoginBrandTagline {
+    font-size: 13px;
+    color: #8BA4BE;
+    background-color: transparent;
+    letter-spacing: 0.5px;
+}
+QLabel#LoginThemeTitle {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.40);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background-color: transparent;
+}
+
+/* 右侧表单区 */
+QFrame#LoginFormPanel {
+    background-color: @surface@;
+    border-top-right-radius: @font.lg@;
+    border-bottom-right-radius: @font.lg@;
+}
+QLabel#LoginTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: @text@;
+    background-color: transparent;
+    letter-spacing: 0.3px;
+}
+QLabel#LoginSubtitle {
+    font-size: 13px;
+    color: @text_muted@;
+    background-color: transparent;
+    margin-top: 2px;
+}
+QLabel#LoginFieldLabel {
+    font-size: @font.sm@;
+    font-weight: 600;
+    color: @text_muted@;
+    background-color: transparent;
+    letter-spacing: 0.3px;
+}
+QLineEdit#LoginInput {
+    background-color: @surface@;
+    color: @text@;
+    border: 1.5px solid @border@;
+    border-radius: @radius.md@;
+    padding: 0 @font.md@;
+    font-size: @font.md@;
+    min-height: 40px;
+    max-height: 44px;
+}
+QLineEdit#LoginInput:hover {
+    border-color: @text_muted@;
+}
+QLineEdit#LoginInput:focus {
+    border: 2px solid @accent@;
+    padding: 0 13px;
+}
+QCheckBox#LoginCheckbox {
+    font-size: @font.sm@;
+    color: @text_muted@;
+    spacing: @radius.md@;
+}
+
+/* 岗位快捷按钮 v7 */
+QPushButton#LoginRoleBtn {
+    background-color: @bg@;
+    border: 1.5px solid @border@;
+    border-radius: @radius.md@;
+    padding: @font.sm@ @radius.md@;
+    min-height: 80px;
+    max-height: 80px;
+}
+QPushButton#LoginRoleBtn:hover {
+    background-color: @selected_bg@;
+    border-color: @primary@;
+}
+QPushButton#LoginRoleBtn:pressed {
+    background-color: @primary_20pct@;
+}
+QPushButton#LoginRoleBtn:checked {
+    background-color: @primary@;
+    border-color: @primary@;
+}
+QPushButton#LoginRoleBtn:checked QLabel#LoginRoleCaption {
+    color: @surface@;
+}
+QLabel#LoginRoleCaption {
+    font-size: @font.sm@;
+    font-weight: 600;
+    color: @text@;
+    background-color: transparent;
+}
+QLabel#LoginErrorLabel {
+    color: @danger@;
+    font-size: @font.sm@;
+    font-weight: 600;
+    background-color: transparent;
+    padding: 4px 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * v7.2 END
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * v7.3 前台工作台 + 收银子模块视觉收口
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* 前台枢纽工具条 */
+QScrollArea#FdHubToolbar {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+}
+QWidget#FdHubToolbarInner {
+    background-color: transparent;
+}
+QPushButton#FrontdeskHubBtn {
+    background-color: @surface_alt@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 0 @font.lg@;
+    min-height: 3@radius.sm@;
+    max-height: 3@radius.sm@;
+    font-size: 13px;
+    font-weight: 500;
+    color: @text_muted@;
+}
+QPushButton#FrontdeskHubBtn:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+QPushButton#FrontdeskHubBtn:checked {
+    background-color: @primary@;
+    color: @surface@;
+    font-weight: 700;
+}
+
+/* 前台实时看板条 */
+QFrame#FrontdeskDashStrip {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    min-height: 3@radius.sm@;
+    max-height: 44px;
+    padding: 4px @font.lg@;
+}
+QLabel#DashStatChip, QLabel#DashStatChipWarn {
+    background-color: transparent;
+    color: @text_muted@;
+    font-size: @font.sm@;
+    padding: 2px @radius.md@;
+}
+QLabel#DashStatChipWarn {
+    color: @room_reserved@;
+    font-weight: 600;
+}
+QLabel#DashLogLabel {
+    font-size: 11px;
+    color: @text_dim@;
+    background-color: transparent;
+    padding: 0 4px;
+}
+
+/* 收银台支付磁贴 v7 — 继承末尾 v8 定义 */
+
+/* 收银台账单明细表 */
+QTableWidget#FdFolioTable {
+    background-color: @surface@;
+    border: none;
+    border-radius: 0;
+    gridline-color: @border@;
+    alternate-background-color: @bg@;
+}
+QTableWidget#FdFolioTable QHeaderView::section {
+    padding: @radius.md@ @font.sm@;
+    min-height: 3@radius.sm@;
+    font-size: 11px;
+}
+
+/* 收银台合计条 */
+QFrame#FdTotalsStrip {
+    background-color: @bg@;
+    border: none;
+    border-top: 1px solid @border@;
+    border-radius: 0 0 @radius.md@ 0;
+    min-height: 5@radius.sm@;
+    padding: 0 @font.lg@;
+}
+QLabel#FdTotalAmount {
+    font-size: 24px;
+    font-weight: 800;
+    color: @text@;
+    letter-spacing: -0.3px;
+    background-color: transparent;
+}
+QLabel#FdPaidAmount, QLabel#FdAmountPositive {
+    font-size: @font.lg@;
+    font-weight: 700;
+    color: @amount_positive@;
+    background-color: transparent;
+}
+QLabel#FdAmountNegative {
+    color: @danger@;
+    font-weight: 700;
+    background-color: transparent;
+}
+
+/* 收银台费率档位行 */
+QFrame#FdBillTierRow {
+    background-color: @bg@;
+    border: none;
+    border-top: 1px solid @border@;
+    padding: @radius.md@ @font.lg@;
+}
+
+/* 收银台延住备注 */
+QLineEdit#txt_deferral_remark {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    padding: 7px @font.sm@;
+    min-height: 3@radius.sm@;
+}
+
+/* SOP 流程条 */
+QFrame#FrontdeskFlowStrip {
+    background-color: @bg@;
+    border: none;
+    border-bottom: 1px solid @border@;
+    min-height: 50px;
+    padding: @radius.sm@ @font.lg@;
+}
+QLabel#FdFlowCircle {
+    font-size: @font.md@;
+    font-weight: 700;
+    border-radius: 13px;
+    border: 1.5px solid;
+}
+QLabel#FdFlowLabel {
+    font-size: @font.sm@;
+    font-weight: 500;
+    background-color: transparent;
+}
+QLabel[flowState="current"] {
+    font-weight: 700;
+}
+QLabel[flowState="done"] {
+    font-weight: 600;
+}
+
+/* 流水底栏 */
+QFrame#FrontdeskLedgerDock {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-left: 3px solid @gold_thread@;
+    border-radius: 0;
+}
+QFrame#FdShiftDock {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * v7.3 END
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ═══ v7.7 P2 全站页面 UX 补全 ═══ */
+
+/* 财务页 v7 */
+QWidget#FinanceTab { background-color: @bg@; }
+QFrame#FinanceSectionSep { background-color: @border@; max-height: 1px; margin: @radius.md@ 0; }
+QPushButton#FinanceQuickExpenseBtn {
+    background-color: @bg@; border: 1px solid @border@; border-radius: @radius.md@;
+    min-height: 52px; font-weight: 600; color: @text@; padding: 0 @radius.md@;
+}
+QPushButton#FinanceQuickExpenseBtn:hover { background-color: @selected_bg@; border-color: @primary@; color: @primary@; }
+
+/* 库存页 v7 */
+QWidget#InventoryTab { background-color: @bg@; }
+QLabel#InventorySectionTitle { font-size: @font.lg@; font-weight: 700; color: @text@; background: transparent; }
+QLabel#InventoryLowWarnTitle { font-size: 13px; font-weight: 600; color: @danger@; background: transparent; }
+QLabel#InventoryFilterChip { font-size: 11px; color: @text_muted@; padding: 0 4px; background: transparent; }
+
+/* 系统设置控制台 v7 */
+QWidget#SystemConsolePage { background-color: @bg@; }
+QWidget#SystemConsolePage QGroupBox { background-color: @surface@; border: 1px solid @border@; border-radius: @radius.md@; }
+
+/* 厂家控制台 v7 */
+QWidget#VendorConsolePage { background-color: @bg@; }
+QWidget#VendorConsolePage QGroupBox#VendorGroup {
+    background-color: @surface@; border: none; border-top: 1px solid @border@; border-radius: 0;
+    margin-top: @font.md@; padding: @font.lg@ 0 @radius.md@ 0; font-weight: 700;
+}
+QFrame#VendorStatRow { background-color: @surface@; border: 1px solid @border@; border-radius: @radius.sm@; margin: 4px 0; padding: 2px 4px; }
+QLabel#VendorStatLabel { color: @text@; font-weight: 600; font-size: @font.sm@; background: transparent; }
+QLabel#VendorStatValue { font-weight: 700; font-family: Consolas, monospace; background: transparent; }
+QPlainTextEdit#VendorConsoleMono { background-color: @bg@; border: 1px solid @border@; border-radius: @radius.md@; font-family: Consolas, monospace; font-size: @font.sm@; }
+QPlainTextEdit#VendorConsoleLog { background-color: @sidebar@; color: @text_dim@; border: none; border-top: 1px solid @border@; font-family: Consolas, monospace; font-size: 11px; }
+
+/* 卡片系统页 v7 */
+QWidget#CardSystemRoot { background-color: @bg@; }
+QFrame#CardSystemHeader { background-color: @bg@; border: 1px solid @border@; border-radius: 0; padding: @radius.md@ @font.sm@; }
+QFrame#MetricsRow { background-color: @bg@; border: 1px solid @border@; border-radius: 0; padding: @radius.sm@; }
+QFrame#MetricCard { background-color: @surface@; border: 1px solid @border@; border-radius: @radius.md@; padding: @radius.md@ @font.md@; }
+QFrame#MetricCard[highlighted="true"] { border: 2px solid @primary@; }
+QFrame#MetricCard:hover { border-color: @accent@; }
+QLabel#CardReadUid { font-weight: 700; color: @text_dim@; padding: @radius.md@ @font.sm@; border: 1px solid @border@; border-radius: @radius.sm@; background-color: @surface@; min-width: 180px; }
+QLabel#CardReadUid[state="ok"] { color: @primary@; border-color: @primary@; }
+QLabel#CardReadUid[state="error"] { color: @danger@; border-color: @danger@; }
+QFrame#ActionPanel { background-color: @bg@; border: 1px solid @border@; border-radius: 0; padding: @radius.md@; min-width: 16@radius.md@; max-width: 200px; }
+
+/* 交班 dock v7 */
+QFrame#FdShiftDock { background-color: @surface@; border: 1px solid @border@; border-radius: 0; }
+QFrame#FdShiftDock QPlainTextEdit#FdShiftNotes { background-color: @surface@; border: 1px solid @border@; border-radius: @radius.sm@; padding: @radius.sm@; }
+
+/* 流水底栏 v7 */
+QFrame#FrontdeskLedgerDock { background-color: @surface@; border: 1px solid @border@; border-left: 3px solid @gold_thread@; border-radius: 0; }
+QFrame#FdLedgerFilterBar { background-color: @bg@; }
+QFrame#FdLedgerFilterBar QPushButton#FdFilterChip { background-color: @surface@; }
+
+/* 退房弹窗 v7 */
+QDialog#CheckoutDialog { background-color: @surface@; border-radius: @font.sm@; }
+
+/* 借物弹窗 v7 */
+QDialog#BorrowDialog { background-color: @surface@; border-radius: @font.sm@; }
+
+/* 房态矩阵房卡 v7 */
+QFrame#RoomCard { background-color: @surface@; border: 1px solid @border@; border-radius: @font.xs@; }
+QWidget#RoomCardBody { background: transparent; }
+QLabel#RoomCardId { font-size: 22px; font-weight: 700; color: @text@; background: transparent; border: none; }
+QLabel#RoomCardGuest { font-size: 13px; font-weight: 600; color: @text@; background: transparent; }
+QLabel#RoomCardMeta { font-size: 11px; color: @text_muted@; background: transparent; border: none; }
+QLabel#RoomCardStatus { font-size: @font.sm@; font-weight: 700; background: transparent; border: none; padding: 0; }
+QLabel#RoomCardBadge { font-size: 11px; font-weight: 700; border-radius: @radius.md@; padding: 2px @font.xs@; }
+QLabel#RoomCardLockWarn { background: @bg@; color: @room_reserved@; border: 1px solid @room_reserved@; border-radius: @radius.md@; padding: 1px @radius.sm@; font-size: @font.xs@; font-weight: 600; }
+QLabel#RoomCardTypeIcon { font-size: @font.sm@; font-weight: 700; border-radius: @radius.md@; padding: 2px @radius.md@; }
+
+/* 空状态 v7 */
+QFrame#MatrixEmptyState { background: @surface@; border: 1px dashed @border@; border-radius: @font.sm@; }
+QLabel#MatrixEmptyTitle { font-size: @font.lg@; font-weight: 600; color: @text_muted@; }
+QLabel#MatrixEmptyHint { font-size: @font.sm@; color: @text_dim@; }
+
+/* 统一设置导航树 v7 */
+QTreeWidget#SettingsNavTree { background: @bg@; border: none; border-right: 1px solid @border@; outline: 0; padding: @font.xs@ 0; font-size: 13px; }
+QTreeWidget#SettingsNavTree::item { padding: @radius.md@ @font.xs@; color: @text@; }
+QTreeWidget#SettingsNavTree::item:has-children { color: @text_muted@; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding-top: @font.sm@; padding-bottom: 4px; background: transparent; }
+QTreeWidget#SettingsNavTree::item:selected { background: @selected_bg@; color: @primary@; font-weight: 700; border-radius: @radius.sm@; }
+QTreeWidget#SettingsNavTree::item:hover:!selected { background: @bg@; color: @text@; border-radius: @radius.sm@; }
+
+/* 批量操作按钮 v7 */
+QPushButton#BatchPrimaryBtn { background: @primary@; color: @surface@; border: 1px solid @primary@; border-radius: @radius.md@; padding: @radius.sm@ @font.lg@; font-weight: 600; }
+QPushButton#BatchSecondaryBtn { background: @bg@; color: @text_muted@; border: 1px solid @border@; border-radius: @radius.md@; padding: @radius.sm@ @font.md@; }
+QPushButton#BatchSuccessBtn { background: @accent@; color: @surface@; border-radius: @radius.md@; padding: @radius.sm@ @font.md@; font-weight: 600; }
+QPushButton#BatchWarnBtn { background: @room_reserved@; color: @surface@; border-radius: @radius.md@; padding: @radius.sm@ @font.md@; font-weight: 600; }
+
+/* 制卡仪式弹窗 v7 */
+QFrame#RitualHeader { background: @sidebar@; border-bottom: 1px solid @sidebar_hover@; min-height: 72px; max-height: 72px; border-top-left-radius: @font.sm@; border-top-right-radius: @font.sm@; }
+QLabel#RitualHeaderIcon { color: @accent@; font-size: 22px; min-width: 32px; background: transparent; }
+QLabel#RitualHeaderTitle { color: @surface@; font-size: @font.lg@; font-weight: 700; background: transparent; }
+QLabel#RitualHeaderSubtitle { color: rgba(255, 255, 255, 0.45); font-size: @font.sm@; background: transparent; }
+QFrame#RitualBody { background: @surface@; border-bottom-left-radius: @font.sm@; border-bottom-right-radius: @font.sm@; }
+QFrame#RitualAnimationBox { background: @bg@; border: 1px solid @border@; border-radius: @font.lg@; min-height: 2@font.xl@; }
+QLabel#RitualTitle { color: @text@; font-size: 1@radius.md@; font-weight: 700; padding: 4px @font.sm@; background: transparent; }
+QLabel#RitualSubtitle { color: @text_muted@; font-size: 13px; padding: 2px @font.sm@; background: transparent; }
+QLabel#RitualHint { color: @text_dim@; font-size: @font.sm@; padding: 2px @font.sm@; background: transparent; }
+QProgressBar#RitualProgress { background: @border@; border: none; border-radius: 3px; min-height: @radius.sm@; max-height: @radius.sm@; }
+QProgressBar#RitualProgress::chunk { background: @accent@; border-radius: 3px; }
+
+/* 数据表围栏 v7 */
+QFrame#DataTableShell { background: @surface@; border: 1px solid @border@; border-left: 4px solid @gold_thread@; border-radius: 0; padding: 0; }
+QFrame#FdCard QFrame#DataTableShell { border-left: none; }
+
+/* 报表 KPI v7 */
+QFrame#ReportKpiCard { background: @elevated@; border: 1px solid @border@; border-top: 2px solid @accent@; border-left: 1px solid @accent@; border-right: 1px solid @accent@; border-radius: @radius.md@; padding: @radius.md@; }
+QFrame#ReportKpiCard QLabel#ReportKpiTitle { color: @text_muted@; font-size: 11px; font-weight: 600; letter-spacing: 0.@radius.md@; background: transparent; }
+QFrame#ReportKpiCard QLabel#ReportKpiSub { color: @text_dim@; font-size: 11px; background: transparent; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue { font-size: 24px; font-weight: 700; background: transparent; letter-spacing: -0.3px; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="primary"] { color: @primary@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="amount_positive"] { color: @amount_positive@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="danger"] { color: @danger@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="accent"] { color: @accent@; }
+
+/* 审计报告 v7 */
+QTextEdit#NightAuditReport { background: @bg@; border: 1px solid @border@; border-radius: @radius.md@; font-family: Consolas, monospace; font-size: @font.sm@; color: @text@; }
+QLabel#AuditOverviewCard { background: @surface@; color: @text@; border: 1px solid @border@; border-radius: @radius.md@; padding: @font.md@ @font.lg@; }
+QLabel#AuditSafe { color: @amount_positive@; background: @bg@; border-radius: @radius.md@; padding: 4px @font.sm@; font-weight: 600; }
+QLabel#AuditCaution { color: @accent@; background: @bg@; border-radius: @radius.md@; padding: 4px @font.sm@; font-weight: 600; }
+QLabel#AuditDanger { color: @danger@; background: @bg@; border-radius: @radius.md@; padding: 4px @font.sm@; font-weight: 600; }
+
+/* ═══ v7.7 P2 END ═══ */
+
+/* ═══ v8 新容器样式 ═══ */
+
+/* 快捷操作带 v8 */
+QFrame#FdQuickBar {
+    background-color: @bg@;
+    border-bottom: 1px solid @border@;
+}
+QFrame#FdQuickBar QPushButton {
+    min-height: 3@radius.sm@;
+}
+
+/* 底栏 Tab 切换 v8 */
+QFrame#FdCheckinBottomDock {
+    background-color: @bg@;
+}
+QFrame#FdCheckinBottomDock QPushButton#FrontdeskHubBtn {
+    background-color: @surface_alt@;
+    border: none;
+    border-radius: @radius.sm@;
+    padding: 0 @font.lg@;
+    min-height: 32px;
+    max-height: 32px;
+    font-size: @font.sm@;
+    font-weight: 500;
+    color: @text_muted@;
+}
+QFrame#FdCheckinBottomDock QPushButton#FrontdeskHubBtn:hover {
+    background-color: @selected_bg@;
+    color: @text@;
+}
+QFrame#FdCheckinBottomDock QPushButton#FrontdeskHubBtn:checked {
+    background-color: @primary@;
+    color: @surface@;
+    font-weight: 700;
+}
+
+/* QSplitter 手柄 v8 */
+QSplitter#FdCheckinVSplit::handle {
+    background-color: @border@;
+    height: 1px;
+    max-height: 1px;
+}
+QSplitter#FdCheckinVSplit::handle:hover {
+    background-color: @accent@;
+}
+
+
+/* ═══ v8 全站最终收口 ═══ */
+
+/* 前台枢纽工具条 v8 */
+QScrollArea#FdHubToolbar { background: @bg@; border: none; border-bottom: 1px solid @border@; }
+QPushButton#FrontdeskHubBtn { background: @surface_alt@; border: none; border-radius: @radius.sm@; padding: 0 @font.lg@; min-height: 3@radius.sm@; max-height: 3@radius.sm@; font-size: 13px; font-weight: 500; color: @text_muted@; }
+QPushButton#FrontdeskHubBtn:hover { background: @selected_bg@; color: @text@; }
+QPushButton#FrontdeskHubBtn:checked { background: @primary@; color: @surface@; font-weight: 600; }
+
+/* 前台看板条 v8 */
+QFrame#FrontdeskDashStrip { background: @bg@; border: none; border-bottom: 1px solid @border@; min-height: 40px; max-height: 44px; }
+QLabel#DashStatChip, QLabel#DashStatChipWarn { background: transparent; color: @text_muted@; font-size: @font.sm@; padding: 4px @radius.md@; }
+QLabel#DashStatChipWarn { color: @room_reserved@; font-weight: 600; }
+
+/* 支付磁贴 v8 */
+QPushButton#PayMethodTile { background: @surface@; border: 1px solid @border@; border-radius: @radius.md@; padding: @font.xs@ @radius.md@; font-size: @font.sm@; font-weight: 600; min-height: 40px; max-height: 4@radius.md@; }
+QPushButton#PayMethodTile:hover { background: @selected_bg@; border-color: @primary@; }
+QPushButton#PayMethodTile[selected="true"] { background: @primary@; color: @surface@; border: 2px solid @primary@; font-weight: 600; }
+
+/* 宾客信息表单 v8 */
+QLineEdit#FdCompactInput, QComboBox#FdCompactCombo { background: @surface@; border: 1px solid @border@; border-radius: @radius.sm@; padding: 0 @font.xs@; min-height: 3@radius.sm@; max-height: 3@radius.sm@; font-size: 13px; }
+QLineEdit#FdCompactInput:focus, QComboBox#FdCompactCombo:focus { border: 2px solid @accent@; padding: 0 9px; }
+
+/* 退房弹窗 v8 */
+/* 继承顶层 QDialog 定义 */
+
+/* 财务页 v8 */
+QWidget#FinanceTab { background: @bg@; }
+QPushButton#FinanceQuickExpenseBtn { background: @bg@; border: 1px solid @border@; border-radius: @radius.md@; min-height: 52px; font-weight: 600; }
+QPushButton#FinanceQuickExpenseBtn:hover { background: @selected_bg@; border-color: @primary@; color: @primary@; }
+
+/* 库存页 v8 */
+QWidget#InventoryTab { background: @bg@; }
+
+/* 系统设置 v8 */
+QWidget#SystemConsolePage { background: @bg@; }
+QWidget#SystemConsolePage QGroupBox { background: @surface@; border: 1px solid @border@; border-radius: @radius.md@; }
+
+/* 厂家控制台 v8 */
+QWidget#VendorConsolePage { background: @bg@; }
+QFrame#VendorStatRow { background: @surface@; border: 1px solid @border@; border-radius: @radius.sm@; margin: 4px 0; padding: 4px; }
+QPlainTextEdit#VendorConsoleMono { background: @bg@; border: 1px solid @border@; border-radius: @radius.md@; font-family: Consolas, monospace; font-size: @font.sm@; }
+QPlainTextEdit#VendorConsoleLog { background: @sidebar@; color: @text_dim@; border: none; border-top: 1px solid @border@; font-family: Consolas, monospace; font-size: 11px; }
+
+/* 卡片系统 v8 */
+QWidget#CardSystemRoot { background-color: @bg@; }
+QFrame#MetricCard { background-color: @surface@; border: 1px solid @border@; border-radius: @radius.md@; padding: @radius.md@ @font.md@; }
+
+/* 统一设置导航树 v8 — 选中色跟随主题 primary_10pct */
+QTreeWidget#SettingsNavTree { background-color: @bg@; border: none; border-right: 1px solid @border@; padding: @font.xs@ 0; font-size: 13px; }
+QTreeWidget#SettingsNavTree::item { padding: @radius.md@ @font.xs@; color: @text@; }
+QTreeWidget#SettingsNavTree::item:selected { background-color: @selected_bg@; color: @text@; font-weight: 600; }
+QTreeWidget#SettingsNavTree::item:hover:!selected { background: @bg@; color: @text@; }
+
+/* 房间导航树 v8 — 单独定义选中色，不泄漏到设置页 */
+QTreeWidget#RoomNavTree { background-color: @bg@; border: 1px solid @border@; border-radius: @radius.md@; padding: @radius.md@ 0; font-size: 13px; }
+QTreeWidget#RoomNavTree::item { padding: @radius.sm@ @font.sm@; color: @text@; border-radius: 4px; }
+QTreeWidget#RoomNavTree::item:selected { background-color: @selected_bg@; color: @text@; font-weight: 600; }
+QTreeWidget#RoomNavTree::item:hover:!selected { background-color: @selected_bg@; color: @text@; }
+QTreeWidget#RoomNavTree::branch { background-color: transparent; }
+
+/* 制卡仪式 v8 */
+QFrame#RitualHeader { background-color: @sidebar@; min-height: 72px; max-height: 72px; border-top-left-radius: @font.sm@; border-top-right-radius: @font.sm@; }
+QLabel#RitualHeaderIcon { color: @accent@; font-size: 22px; }
+QLabel#RitualHeaderTitle { color: @surface@; font-size: @font.lg@; font-weight: 600; }
+QFrame#RitualBody { background-color: @surface@; border-bottom-left-radius: @font.sm@; border-bottom-right-radius: @font.sm@; }
+QFrame#RitualAnimationBox { background-color: @bg@; border: 1px solid @border@; border-radius: @font.lg@; min-height: 2@font.xl@; }
+QProgressBar#RitualProgress { background-color: @border@; border: none; border-radius: 3px; min-height: @radius.sm@; max-height: @radius.sm@; }
+QProgressBar#RitualProgress::chunk { background-color: @accent@; border-radius: 3px; }
+
+/* 报表 KPI v8 */
+QFrame#ReportKpiCard { background-color: @elevated@; border: 1px solid @border@; border-top: 2px solid @accent@; border-left: 1px solid @accent@; border-right: 1px solid @accent@; border-radius: @radius.md@; padding: @radius.md@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue { font-size: 24px; font-weight: 600; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="primary"] { color: @primary@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="amount_positive"] { color: @amount_positive@; }
+QFrame#ReportKpiCard QLabel#ReportKpiValue[tone="danger"] { color: @danger@; }
+
+/* 审计 v8 */
+QTextEdit#NightAuditReport { background: @bg@; border: 1px solid @border@; border-radius: @radius.md@; font-family: Consolas, monospace; font-size: @font.sm@; }
+QLabel#AuditSafe { color: @amount_positive@; background: @bg@; border-radius: @radius.md@; padding: 4px @font.sm@; font-weight: 600; }
+QLabel#AuditCaution { color: @accent@; background: @bg@; border-radius: @radius.md@; padding: 4px @font.sm@; font-weight: 600; }
+QLabel#AuditDanger { color: @danger@; background: @bg@; border-radius: @radius.md@; padding: 4px @font.sm@; font-weight: 600; }
+
+/* 数据表围栏 v8 */
+QFrame#DataTableShell { background: @surface@; border: 1px solid @border@; border-radius: 0; }
+
+/* 批量操作按钮 v8 */
+QPushButton#BatchPrimaryBtn { background: @primary@; color: @surface@; border: 1px solid @primary@; border-radius: @radius.md@; padding: @radius.sm@ @font.lg@; font-weight: 600; }
+QPushButton#BatchSecondaryBtn { background: @bg@; color: @text_muted@; border: 1px solid @border@; border-radius: @radius.md@; padding: @radius.sm@ @font.md@; }
+QPushButton#BatchSuccessBtn { background: @accent@; color: @surface@; border-radius: @radius.md@; padding: @radius.sm@ @font.md@; font-weight: 600; }
+QPushButton#BatchWarnBtn { background: @room_reserved@; color: @surface@; border-radius: @radius.md@; padding: @radius.sm@ @font.md@; font-weight: 600; }
+
+/* 空状态 v8 */
+QFrame#MatrixEmptyState { background: @surface@; border: 1px dashed @border@; border-radius: @font.sm@; }
+QLabel#MatrixEmptyTitle { font-size: @font.lg@; font-weight: 600; color: @text_muted@; }
+
+/* 房态房卡 v8 */
+QFrame#RoomCard { background: @surface@; border: 1px solid @border@; border-radius: @font.xs@; }
+QLabel#RoomCardId { font-size: 22px; font-weight: 600; color: @text@; background: transparent; }
+QLabel#RoomCardGuest { font-size: 13px; font-weight: 600; color: @text@; background: transparent; }
+QLabel#RoomCardMeta { font-size: 11px; color: @text_muted@; background: transparent; }
+
+/* QSplitter 手柄 v8 */
+QSplitter#FdCheckinVSplit::handle { background: @border@; height: 1px; max-height: 1px; }
+QSplitter#FdCheckinVSplit::handle:hover { background: @accent@; }
+
+/* 底栏 Tab v8 */
+QFrame#FdCheckinBottomDock QPushButton#FrontdeskHubBtn { background: @surface_alt@; border: none; border-radius: @radius.sm@; padding: 0 @font.lg@; min-height: 32px; max-height: 32px; font-size: @font.sm@; font-weight: 500; color: @text_muted@; }
+QFrame#FdCheckinBottomDock QPushButton#FrontdeskHubBtn:hover { background: @selected_bg@; color: @text@; }
+QFrame#FdCheckinBottomDock QPushButton#FrontdeskHubBtn:checked { background: @primary@; color: @surface@; font-weight: 600; }
+
+/* ═══ v8 END ═══ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * v8.1 酒店总览页组件 — 静态排版从 hotel_overview_tab_v4.py 内联 QSS 迁移
+ * ═══════════════════════════════════════════════════════════════ */
+QFrame#RoomSnapRow { background: transparent; }
+QLabel#RoomSnapLabel { font-size: 13px; font-weight: 600; color: @text@; background: transparent; }
+QLabel#RoomSnapCount { font-size: 13px; font-weight: 700; background: transparent; }
+QLabel#AlertTitle { font-size: 13px; font-weight: 700; background: transparent; }
+QLabel#AlertDetail { font-size: @font.sm@; color: @text_muted@; background: transparent; }
+QLabel#TodoTitle { font-size: 13px; font-weight: 700; color: @text@; background: transparent; }
+QLabel#TodoHint { font-size: @font.sm@; color: @text_muted@; background: transparent; }
+QLabel#SectionCardTitle { font-size: @font.md@; font-weight: 700; color: @text@; letter-spacing: 0.3px; background: transparent; }
+QLabel#WelcomeTitle { font-size: @font.lg@; font-weight: 700; color: @text@; background: transparent; }
+QLabel#WelcomeDate { font-size: 13px; color: @text_muted@; background: transparent; }
+QLabel#WelcomeShift { font-size: @font.sm@; color: @text_muted@; background: transparent; }
+QLabel#WelcomeOperator { font-size: @font.sm@; font-weight: 600; color: @primary@; background: transparent; }
+QLabel#RoomTotalLabel { font-size: 13px; font-weight: 600; color: @text_muted@; background: transparent; }
+QLabel#RoomOccupancyLabel { font-size: 13px; font-weight: 700; color: @primary@; background: transparent; }
+QLabel#AlertEmptyLabel { font-size: 13px; color: @text_dim@; padding: @font.lg@; background: transparent; }
+QProgressBar#RoomSnapBar { border: none; border-radius: 5px; }
+QProgressBar#RoomSnapBar::chunk { border-radius: 5px; }
+/* ═══ v8.1 END ═══ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * v8.2 房态矩阵卡片子控件 — 静态排版从 room_matrix.py refresh_style() 迁移
+ * ═══════════════════════════════════════════════════════════════ */
+QLabel#RoomCardId { font-size: 2@radius.md@; font-weight: 900; background: transparent; border: none; }
+QLabel#RoomCardGuest { font-size: @font.md@; font-weight: 600; background: transparent; }
+QLabel#RoomCardMeta { font-size: @font.sm@; background: transparent; border: none; }
+QLabel#RoomCardStatus { font-size: @font.sm@; font-weight: 800; background: transparent; border: none; padding: 0; }
+QLabel#RoomCardLockWarn { font-size: @font.xs@; font-weight: 800; border-radius: @radius.md@; padding: 1px @radius.sm@; }
+/* ═══ v8.2 END ═══ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * v8.3 房态图例 + 筛选条组件
+ * ═══════════════════════════════════════════════════════════════ */
+QLabel#LegendTitle { font-size: 11px; font-weight: 600; color: @text_muted@; letter-spacing: 1.2px; background: transparent; }
+QLabel#LegendDot { font-size: @font.md@; background: transparent; }
+QLabel#LegendLabel { font-size: @font.sm@; color: @text_muted@; background: transparent; }
+/* ═══ v8.3 END ═══ */
+
+/* ═══════════════════════════════════════════════════════════════
+ * sub-c UI/UX 打磨（2026-06-22）
+ *   1. .SolidCard 统一卡片样式（p-4=@font.lg@ / p-6=24px / gap-4=@font.lg@ / gap-6=24px）
+ *   2. QTableWidget/QListWidget max-h-96 = 384px，长列表自动滚动
+ *   3. 原生 QPushButton/QToolButton/QListWidgetItem hover 反馈 + 指针手型
+ *   4. QScrollBar 悬停加粗（细条 @radius.sm@ → @radius.md@）+ 圆角
+ *   5. QGroupBox/QFrame 卡片底部留 padding，避免内容贴边
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. .SolidCard 统一卡片样式（业务页可 setObjectName("SolidCard") 复用）── */
+QFrame#SolidCard, QGroupBox#SolidCard {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    padding: @font.lg@;            /* p-4 = @font.lg@ */
+}
+QFrame#SolidCardLg, QGroupBox#SolidCardLg {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @font.sm@;
+    padding: 24px;            /* p-6 = 24px */
+}
+/* 卡片间 gap-4 (@font.lg@) — 通过 QLayout setSpacing(16) 落地，QSS 仅兜底 */
+QFrame#SolidCard + QFrame#SolidCard,
+QFrame#SolidCardLg + QFrame#SolidCardLg {
+    margin-top: @font.lg@;
+}
+
+/* ── 2. 长列表 max-h-96=384px（PySide6 QSS 不直接支持 max-height，靠 setMaximumHeight 落地）── */
+/*    此处仅给视觉规则：交替行 / 表头加高 / 行高密度。具体限高在 style_data_table 里调 setMaximumHeight(384) */
+QTableWidget#SolidLongList,
+QListWidget#SolidLongList {
+    background-color: @surface@;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    alternate-background-color: @bg@;
+    outline: 0;
+    /* 触发 max-height 仍需 setMaximumHeight(384) */
+}
+QTableWidget#SolidLongList::item,
+QListWidget#SolidLongList::item {
+    padding: @radius.md@ @font.sm@;
+    border-bottom: 1px solid @border@;
+}
+QListWidget#SolidLongList::item:selected {
+    background-color: @primary@;
+    color: @surface@;
+}
+QListWidget#SolidLongList::item:hover {
+    background-color: @bg@;
+}
+
+/* ── 4. QScrollBar 悬停加粗（细条 @radius.sm@ → @radius.md@）+ 圆角 ──
+ *    原 §26 滚动条样式已存在；此处覆盖以增强悬停反馈（细条变粗条更易抓） */
+QScrollBar:vertical {
+    width: @radius.sm@;                /* 细条 @radius.sm@ — 默认态不抢内容 */
+    background-color: transparent;
+    margin: 2px 0;
+    border-radius: @radius.sm@;
+}
+QScrollBar:vertical:hover {
+    width: @font.xs@;               /* 悬停加粗到 @font.xs@，方便精准拖拽 */
+    background-color: @bg@;
+}
+QScrollBar:horizontal {
+    height: @radius.sm@;
+    background-color: transparent;
+    margin: 0 2px;
+    border-radius: @radius.sm@;
+}
+QScrollBar:horizontal:hover {
+    height: @font.xs@;
+    background-color: @bg@;
+}
+QScrollBar::handle:vertical,
+QScrollBar::handle:horizontal {
+    border-radius: @radius.sm@;
+}
+QScrollBar::handle:vertical:hover,
+QScrollBar::handle:horizontal:hover {
+    border-radius: @radius.sm@;
+}
+
+/* ── 5. QGroupBox 统一卡片间距（sub-c：卡片对齐）── */
+QGroupBox {
+    background-color: transparent;
+    border: 1px solid @border@;
+    border-radius: @radius.md@;
+    margin-top: 1@radius.md@;          /* 标题预留 */
+    padding: @font.lg@ @font.lg@ @font.lg@ @font.lg@;
+    font-weight: 600;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 2px @font.xs@;
+    margin-top: 4px;
+    background-color: @bg@;
+    border: 1px solid @border@;
+    border-radius: @radius.sm@;
+    color: @text_muted@;
+    font-size: @font.sm@;
+}
+
+/* ═══ sub-c END ═══ */

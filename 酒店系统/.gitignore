@@ -1,0 +1,58 @@
+# ── 构建输出 ──
+build/
+dist/
+# 注意：*.spec 必须进版本控制，Lovable 需要它才能理解构建配置
+# *.spec
+
+# ── Python 缓存 ──
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# ── pytest ──
+.pytest_cache/
+
+# ── 数据库 ──
+shadow_guard.db
+*.db
+*.sqlite
+
+# ── 配置文件（需按环境个性化） ──
+brand.json
+*.env
+
+# ── 锁配置文件（含锁密码/功率参数，按现场定） ──
+USB_LOCK_PROFILES/
+POWER_CONTROLLER_PROFILES/
+
+# ── 启动日志 ──
+*.log
+logs/
+stderr*.log
+stdout*.log
+
+# ── 第三方依赖/部署工具目录 ──
+redist/
+_deploy_deps/
+
+# ── IDE/系统 ──
+.cursor/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── 翻译缓存 ──
+translations/__pycache__/
+
+# ── OS 生成文件 ──
+Thumbs.db
+.DS_Store
+
+# ── 安装脚本 ──
+build_installer.bat
+build_installer.ps1
+
+# ── 输出目录 ──
+Output/

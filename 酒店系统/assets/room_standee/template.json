@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "name": "A7 极简立牌",
+  "canvas_mm": [74, 105],
+  "dpi": 300,
+  "layout_note": "上留白35% · 二维码2.5cm · 下留白15% · 文案区",
+  "template_image": "standee_template.png",
+  "slots": {
+    "room_id": {
+      "x": 437,
+      "y": 390,
+      "font_size": 52,
+      "color": "#C9C4BC",
+      "anchor": "mm",
+      "letter_spacing": 4
+    },
+    "qr": {
+      "x": 290,
+      "y": 434,
+      "size": 295
+    },
+    "cta": {
+      "x": 437,
+      "y": 928,
+      "font_size": 38,
+      "color": "#2A2826",
+      "anchor": "mm",
+      "text": "一键扫码",
+      "bold": true
+    },
+    "services": {
+      "x": 437,
+      "y": 988,
+      "font_size": 21,
+      "color": "#8A847C",
+      "anchor": "mm",
+      "text": "连无线 · 逛超市 · 找前台 · 叫保洁"
+    },
+    "welcome": {
+      "x": 437,
+      "y": 1068,
+      "font_size": 24,
+      "color": "#6E6962",
+      "anchor": "mm",
+      "prefix": "欢迎入住",
+      "suffix": ""
+    }
+  }
+}

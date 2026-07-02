@@ -1,0 +1,13 @@
+{
+  "brand": "测试品牌",
+  "adapter_id": "test_fixture",
+  "payload_size": 16,
+  "magic": "C92B20B7",
+  "dll": {"path": "test.dll"},
+  "card_types": {
+    "guest": {"type_byte": 1}
+  },
+  "date_encoding": {
+    "algorithm": "legacy_prousb"
+  }
+}

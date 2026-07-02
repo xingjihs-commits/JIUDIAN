@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [sub-i] 超市分类图标：个人护理 / Medicine — 由 shop_icon_pack 体系生成 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#C47E8A" stop-opacity="0.18"/>
+    </linearGradient>
+  </defs>
+  <!-- 圆角背景 -->
+  <rect x="6" y="6" width="188" height="188" rx="28" ry="28"
+        fill="url(#bg)" stroke="#C47E8A" stroke-width="3"/>
+  <!-- 顶部色带 -->
+  <rect x="6" y="6" width="188" height="14" rx="7" ry="7" fill="#C47E8A" opacity="0.85"/>
+  <!-- 大 emoji（系统字体渲染） -->
+  <text x="100" y="118" text-anchor="middle"
+        font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif"
+        font-size="100" font-weight="normal">💊</text>
+  <!-- 中文标签 -->
+  <text x="100" y="160" text-anchor="middle"
+        font-family="PingFang SC, Microsoft YaHei, sans-serif"
+        font-size="20" font-weight="600" fill="#2A3038">个人护理</text>
+  <!-- 英文标签 -->
+  <text x="100" y="180" text-anchor="middle"
+        font-family="Helvetica, Arial, sans-serif"
+        font-size="12" font-weight="400" fill="#6B7280">Medicine</text>
+</svg>

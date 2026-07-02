@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /s /b \"E:\\\\酒店系统\")",
+      "Bash(py -3 -c ' *)",
+      "Bash(bridgecore/clue_hunter.py — 线索猎人)",
+      "Bash(从安装目录中自动发现门锁品牌线索，给 identity_engine 喂料。)",
+      "Bash(不依赖任何品牌特定代码，纯启发式扫描。)",
+      "Bash(线索来源（按权重排序）：)",
+      "Bash(python tools/qss_compiler.py extract \"themes/base.template.qss\")",
+      "Bash(python -c \"import sys; sys.path.insert\\(0,'.'\\); from theme_palette import THEMES; print\\(list\\(THEMES.keys\\(\\)\\)\\)\")",
+      "Bash(python app_main.py)",
+      "Bash(taskkill /F /IM python.exe)",
+      "Bash(tar -czf ui_files.tar.gz themes/mist.qss themes/shade.qss themes/glow.qss themes/ink.qss themes/base.template.qss design_tokens.py design_tokens_v4.py theme_palette.py app_main.py main_window_impl.py main_window/navigation.py frontdesk_ui.py frontdesk_ui_v4.py ui_surface.py command_palette.py overlay_widgets.py mini_tab_strip.py enhanced_status_bar.py smart_header.py nav_manifest.py ui/__init__.py ui/tokens/__init__.py ui/tokens/colors.py ui/tokens/spacing.py ui/tokens/typography.py ui/layout/frontdesk.py ui/components/toast.py ui/branding/brand.py tools/qss_compiler.py)",
+      "Bash(rm -f ui_files.zip)",
+      "Bash(powershell -Command \"Compress-Archive -Path themes/mist.qss,themes/shade.qss,themes/glow.qss,themes/ink.qss,themes/base.template.qss,design_tokens.py,design_tokens_v4.py,theme_palette.py,app_main.py,main_window_impl.py,main_window/navigation.py,frontdesk_ui.py,frontdesk_ui_v4.py,ui_surface.py,command_palette.py,overlay_widgets.py,mini_tab_strip.py,enhanced_status_bar.py,smart_header.py,nav_manifest.py,ui/__init__.py,ui/tokens/__init__.py,ui/tokens/colors.py,ui/tokens/spacing.py,ui/tokens/typography.py,ui/layout/frontdesk.py,ui/components/toast.py,ui/branding/brand.py,tools/qss_compiler.py -DestinationPath ui_files.zip -Force\")",
+      "Bash(python -m pytest tests/test_handover_import.py -v --tb=short)",
+      "Bash(python -c ' *)",
+      "Bash(python solid_ui_v2/scripts/test_smoke.py)",
+      "Bash(unset SOLID_UI_V2)",
+      "Bash(export SOLID_UI_V2=1)",
+      "Bash(export QT_QPA_PLATFORM=offscreen)"
+    ]
+  }
+}

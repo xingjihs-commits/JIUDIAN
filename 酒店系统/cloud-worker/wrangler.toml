@@ -1,0 +1,10 @@
+name = "shadowguard-cloud"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "shadowguard-db"
+database_id = "b77a2f8d-6683-414d-9bbe-bd4b2986d9b4"
+
+# deploy: 2026-05-09

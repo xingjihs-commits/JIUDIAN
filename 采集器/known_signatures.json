@@ -1,0 +1,214 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "SolidCollector 已知品牌签名库 — 运行时加载，新增品牌无需改源码",
+    "schema": {
+      "magic": "前 4 字节 hex 字符串（大写），无 magic 头留空",
+      "payload_size": "卡数据字节数（通常 16）",
+      "dll_names": "原厂软件安装目录下 DLL 文件名列表（不区分大小写子串匹配）",
+      "channel": "通信通道：dll | serial | usb_hid",
+      "card_types": "类型→type_byte 高半字节映射",
+      "checksum_algos": "该品牌可能使用的校验算法名列表",
+      "serial_hint": "串口参数：baudrate / read_command / write_command",
+      "notes": "人类可读备注"
+    }
+  },
+  "signatures": {
+    "proUSB_V9": {
+      "magic": "C92B20B7",
+      "payload_size": 16,
+      "dll_names": ["V9RFL.dll"],
+      "channel": "dll",
+      "card_types": {
+        "guest": {"type_byte_high": 6},
+        "master": {"type_byte_high": 11},
+        "building": {"type_byte_high": 12},
+        "floor": {"type_byte_high": 13},
+        "emergency": {"type_byte_high": 10},
+        "auth": {"type_byte_high": 0},
+        "record": {"type_byte_high": 8}
+      },
+      "checksum_algos": ["byte15_fb", "sum14_zero_byte15"]
+    },
+    "aidier_3200": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["lock3200.dll", "lockLM.dll"],
+      "channel": "dll",
+      "notes": "爱迪尔 Lock3200/LockLM — A 系列"
+    },
+    "aidier_9200": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["lock9200.dll", "lockSAAS.dll"],
+      "channel": "dll",
+      "notes": "爱迪尔 Lock9200 — C/S 系列"
+    },
+    "bida_ib": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["BidaICard.dll", "BidaInterface.dll"],
+      "channel": "dll",
+      "notes": "必达 IB 系列"
+    },
+    "baoxunda": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["hotellock.dll"],
+      "channel": "serial",
+      "serial_hint": {"baudrate": 19200, "read_command": "", "write_command": ""},
+      "notes": "宝迅达酒店门锁 — 串口通信"
+    },
+    "tongchuangxinjia": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["icdll.dll", "tc_doorlock.dll"],
+      "channel": "serial",
+      "serial_hint": {"baudrate": 9600},
+      "notes": "同创新佳 — 串口通信"
+    },
+    "yadidun": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["ydd_jk2008.dll", "yadidun.dll"],
+      "channel": "serial",
+      "serial_hint": {"baudrate": 38400},
+      "notes": "雅迪顿 YDD_JK2008 — 串口通信"
+    },
+    "rfu_liwei": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["RFULock.dll"],
+      "channel": "serial",
+      "serial_hint": {"baudrate": 9600, "read_command": "AA5500FF00FF0100"},
+      "notes": "力维 RFU — 串口通信"
+    },
+    "xirong": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["xr_carddll.dll", "xr_client.dll"],
+      "channel": "serial",
+      "serial_hint": {"baudrate": 19200},
+      "notes": "西容 — 串口通信"
+    },
+    "level_lock": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["LockManage.dll", "LockSvr.dll"],
+      "channel": "dll",
+      "notes": "力维 LevelLock"
+    },
+    "syron": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["syron.dll"],
+      "channel": "dll",
+      "notes": "西容 Syron（世纪卡）"
+    },
+    "xirong": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["xr_carddll.dll", "xr_client.dll"],
+      "channel": "serial",
+      "serial_hint": {"baudrate": 19200},
+      "notes": "西容 — 串口通信"
+    },
+    "proUSB_V10": {
+      "magic": "C92B20B7",
+      "payload_size": 16,
+      "dll_names": ["V10RFL.dll", "ProRFL.dll", "ProRFLV10.dll"],
+      "channel": "dll",
+      "card_types": {
+        "guest": {"type_byte_high": 6},
+        "master": {"type_byte_high": 11},
+        "building": {"type_byte_high": 12},
+        "floor": {"type_byte_high": 13},
+        "emergency": {"type_byte_high": 10}
+      },
+      "checksum_algos": ["byte15_fb", "sum14_zero_byte15"],
+      "notes": "proUSB V10/V11 — V9 的升级版，兼容 V9 协议"
+    },
+    "proUSB_V8": {
+      "magic": "C92B20B7",
+      "payload_size": 16,
+      "dll_names": ["V8RFL.dll"],
+      "channel": "dll",
+      "card_types": {
+        "guest": {"type_byte_high": 6},
+        "master": {"type_byte_high": 11}
+      },
+      "checksum_algos": ["byte15_fb"],
+      "notes": "proUSB V8 — V9 的前身"
+    },
+    "rfu_liwei": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["RFULock.dll"],
+      "channel": "serial",
+      "serial_hint": {"baudrate": 9600, "read_command": "AA5500FF00FF0100"},
+      "notes": "力维 RFU — 串口通信"
+    },
+    "haier": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["haier_lock.dll", "haiercard.dll"],
+      "channel": "dll",
+      "notes": "海尔门锁系统"
+    },
+    "kaadas": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["kaadas.dll", "kds_card.dll"],
+      "channel": "dll",
+      "notes": "凯迪仕门锁系统"
+    },
+    "dorma": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["dorma.dll", "dormakaba.dll"],
+      "channel": "dll",
+      "notes": "多玛/Dormakaba 门锁系统"
+    },
+    "onity": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["onity.dll", "onitycard.dll"],
+      "channel": "serial",
+      "serial_hint": {"baudrate": 19200},
+      "notes": "Onity 门锁系统"
+    },
+    "salto": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["salto.dll", "saltocard.dll"],
+      "channel": "dll",
+      "notes": "Salto 门锁系统"
+    },
+    "assa_abloy": {
+      "magic": "",
+      "payload_size": 16,
+      "dll_names": ["assa.dll", "abloy.dll", "visonic.dll"],
+      "channel": "dll",
+      "notes": "ASSA ABLOY 门锁系统"
+    }
+  },
+  "encryption_hints": {
+    "proUSB_V9": {
+      "known_keys": ["A0A1A2A3A4A5", "FFFFFFFFFFFF", "B0B1B2B3B4B5"],
+      "card_types": ["classic_1k", "sle4442"],
+      "notes": "V9 公版默认密钥；SLE4442 走 d12=1 轻量模式"
+    },
+    "aidier_3200": {
+      "known_keys": ["FFFFFFFFFFFF", "A0A1A2A3A4A5"],
+      "card_types": ["classic_1k"]
+    },
+    "bida_ib": {
+      "known_keys": ["FFFFFFFFFFFF", "A0A1A2A3A4A5"],
+      "card_types": ["classic_1k"]
+    },
+    "baoxunda": {
+      "known_keys": ["FFFFFFFFFFFF"],
+      "card_types": ["classic_1k"]
+    }
+  }
+}

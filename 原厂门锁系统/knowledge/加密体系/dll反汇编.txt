@@ -1,0 +1,298 @@
+Using: D:\AI\智能门锁管理系统新2021网络版\V9RFL_real.dll (286767 bytes)
+ImageBase=0x10000000, sections:
+  .text: VA=0x10001000 size=245760
+  .rdata: VA=0x1003D000 size=12288
+  .data: VA=0x10040000 size=12288
+  .idata: VA=0x10044000 size=4096
+  .reloc: VA=0x10045000 size=8192
+
+GuestCard @ 0x1000115E
+.text: VA=0x10001000 size=245760
+GuestCard 反汇编 7774 条指令
+
+函数边界: 0x1000115E - 0x100050C1
+======================================================================
+【前 200 条指令】
+======================================================================
+  0x1000115E: jmp        0x10008d60                                         [JMP]
+  0x10001163: jmp        0x1000f3a0                                         [JMP]
+  0x10001168: jmp        0x10001f20                                         [JMP]
+  0x1000116D: jmp        0x10011e80                                         [JMP]
+  0x10001172: jmp        0x10003710                                         [JMP]
+  0x10001177: jmp        0x10001950                                         [JMP]
+  0x1000117C: jmp        0x10006db0                                         [JMP]
+  0x10001181: jmp        0x1000be10                                         [JMP]
+  0x10001186: jmp        0x1000cc40                                         [JMP]
+  0x1000118B: jmp        0x10007a00                                         [JMP]
+  0x10001190: jmp        0x100107a0                                         [JMP]
+  0x10001195: jmp        0x10001ab0                                         [JMP]
+  0x1000119A: jmp        0x1000b960                                         [JMP]
+  0x1000119F: jmp        0x100021c0                                         [JMP]
+  0x100011A4: jmp        0x10001fe0                                         [JMP]
+  0x100011A9: jmp        0x10007d20                                         [JMP]
+  0x100011AE: jmp        0x10010be0                                         [JMP]
+  0x100011B3: jmp        0x10009780                                         [JMP]
+  0x100011B8: jmp        0x10011870                                         [JMP]
+  0x100011BD: jmp        0x1000ab70                                         [JMP]
+  0x100011C2: jmp        0x100128e0                                         [JMP]
+  0x100011C7: jmp        0x10010400                                         [JMP]
+  0x100011CC: jmp        0x10001b60                                         [JMP]
+  0x100011D1: jmp        0x10010930                                         [JMP]
+  0x100011D6: jmp        0x1000fea0                                         [JMP]
+  0x100011DB: jmp        0x1000d5b0                                         [JMP]
+  0x100011E0: jmp        0x10010000                                         [JMP]
+  0x100011E5: jmp        0x10001790                                         [JMP]
+  0x100011EA: jmp        0x100020a0                                         [JMP]
+  0x100011EF: jmp        0x100054b0                                         [JMP]
+  0x100011F4: jmp        0x1000fde0                                         [JMP]
+  0x100011F9: jmp        0x10006710                                         [JMP]
+  0x100011FE: jmp        0x10003060                                         [JMP]
+  0x10001203: jmp        0x10012c90                                         [JMP]
+  0x10001208: jmp        0x10002670                                         [JMP]
+  0x1000120D: int3                                                         
+  0x1000120E: int3                                                         
+  0x1000120F: int3                                                         
+  0x10001210: int3                                                         
+  0x10001211: int3                                                         
+  0x10001212: int3                                                         
+  0x10001213: int3                                                         
+  0x10001214: int3                                                         
+  0x10001215: int3                                                         
+  0x10001216: int3                                                         
+  0x10001217: int3                                                         
+  0x10001218: int3                                                         
+  0x10001219: int3                                                         
+  0x1000121A: int3                                                         
+  0x1000121B: int3                                                         
+  0x1000121C: int3                                                         
+  0x1000121D: int3                                                         
+  0x1000121E: int3                                                         
+  0x1000121F: int3                                                         
+  0x10001220: int3                                                         
+  0x10001221: int3                                                         
+  0x10001222: int3                                                         
+  0x10001223: int3                                                         
+  0x10001224: int3                                                         
+  0x10001225: int3                                                         
+  0x10001226: int3                                                         
+  0x10001227: int3                                                         
+  0x10001228: int3                                                         
+  0x10001229: int3                                                         
+  0x1000122A: int3                                                         
+  0x1000122B: int3                                                         
+  0x1000122C: int3                                                         
+  0x1000122D: int3                                                         
+  0x1000122E: int3                                                         
+  0x1000122F: int3                                                         
+  0x10001230: int3                                                         
+  0x10001231: int3                                                         
+  0x10001232: int3                                                         
+  0x10001233: int3                                                         
+  0x10001234: int3                                                         
+  0x10001235: int3                                                         
+  0x10001236: int3                                                         
+  0x10001237: int3                                                         
+  0x10001238: int3                                                         
+  0x10001239: int3                                                         
+  0x1000123A: int3                                                         
+  0x1000123B: int3                                                         
+  0x1000123C: int3                                                         
+  0x1000123D: int3                                                         
+  0x1000123E: int3                                                         
+  0x1000123F: int3                                                         
+  0x10001240: int3                                                         
+  0x10001241: int3                                                         
+  0x10001242: int3                                                         
+  0x10001243: int3                                                         
+  0x10001244: int3                                                         
+  0x10001245: int3                                                         
+  0x10001246: int3                                                         
+  0x10001247: int3                                                         
+  0x10001248: int3                                                         
+  0x10001249: int3                                                         
+  0x1000124A: int3                                                         
+  0x1000124B: int3                                                         
+  0x1000124C: int3                                                         
+  0x1000124D: int3                                                         
+  0x1000124E: int3                                                         
+  0x1000124F: int3                                                         
+  0x10001250: int3                                                         
+  0x10001251: int3                                                         
+  0x10001252: int3                                                         
+  0x10001253: int3                                                         
+  0x10001254: int3                                                         
+  0x10001255: int3                                                         
+  0x10001256: int3                                                         
+  0x10001257: int3                                                         
+  0x10001258: int3                                                         
+  0x10001259: int3                                                         
+  0x1000125A: int3                                                         
+  0x1000125B: int3                                                         
+  0x1000125C: int3                                                         
+  0x1000125D: int3                                                         
+  0x1000125E: int3                                                         
+  0x1000125F: int3                                                         
+  0x10001260: int3                                                         
+  0x10001261: int3                                                         
+  0x10001262: int3                                                         
+  0x10001263: int3                                                         
+  0x10001264: int3                                                         
+  0x10001265: int3                                                         
+  0x10001266: int3                                                         
+  0x10001267: int3                                                         
+  0x10001268: int3                                                         
+  0x10001269: int3                                                         
+  0x1000126A: int3                                                         
+  0x1000126B: int3                                                         
+  0x1000126C: int3                                                         
+  0x1000126D: int3                                                         
+  0x1000126E: int3                                                         
+  0x1000126F: int3                                                         
+  0x10001270: int3                                                         
+  0x10001271: int3                                                         
+  0x10001272: int3                                                         
+  0x10001273: int3                                                         
+  0x10001274: int3                                                         
+  0x10001275: int3                                                         
+  0x10001276: int3                                                         
+  0x10001277: int3                                                         
+  0x10001278: int3                                                         
+  0x10001279: int3                                                         
+  0x1000127A: int3                                                         
+  0x1000127B: int3                                                         
+  0x1000127C: int3                                                         
+  0x1000127D: int3                                                         
+  0x1000127E: int3                                                         
+  0x1000127F: int3                                                         
+  0x10001280: int3                                                         
+  0x10001281: int3                                                         
+  0x10001282: int3                                                         
+  0x10001283: int3                                                         
+  0x10001284: int3                                                         
+  0x10001285: int3                                                         
+  0x10001286: int3                                                         
+  0x10001287: int3                                                         
+  0x10001288: int3                                                         
+  0x10001289: int3                                                         
+  0x1000128A: int3                                                         
+  0x1000128B: int3                                                         
+  0x1000128C: int3                                                         
+  0x1000128D: int3                                                         
+  0x1000128E: int3                                                         
+  0x1000128F: int3                                                         
+  0x10001290: int3                                                         
+  0x10001291: int3                                                         
+  0x10001292: int3                                                         
+  0x10001293: int3                                                         
+  0x10001294: int3                                                         
+  0x10001295: int3                                                         
+  0x10001296: int3                                                         
+  0x10001297: int3                                                         
+  0x10001298: int3                                                         
+  0x10001299: int3                                                         
+  0x1000129A: int3                                                         
+  0x1000129B: int3                                                         
+  0x1000129C: int3                                                         
+  0x1000129D: int3                                                         
+  0x1000129E: int3                                                         
+  0x1000129F: int3                                                         
+  0x100012A0: int3                                                         
+  0x100012A1: int3                                                         
+  0x100012A2: int3                                                         
+  0x100012A3: int3                                                         
+  0x100012A4: int3                                                         
+  0x100012A5: int3                                                         
+  0x100012A6: int3                                                         
+  0x100012A7: int3                                                         
+  0x100012A8: int3                                                         
+  0x100012A9: int3                                                         
+  0x100012AA: int3                                                         
+  0x100012AB: int3                                                         
+  0x100012AC: int3                                                         
+  0x100012AD: int3                                                         
+  0x100012AE: int3                                                         
+  0x100012AF: int3                                                         
+  0x100012B0: int3                                                         
+  0x100012B1: int3                                                         
+
+======================================================================
+【内部调用函数】
+======================================================================
+
+  0x10001046 (?) - 3770 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x10001064 (hex_a) - 3764 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x1000107D (?) - 3759 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x10001082 (ReadCard) - 3758 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x100010AF (?) - 3749 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x100010C8 (?) - 3744 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x10001168 (?) - 3712 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x10001177 (?) - 3709 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x100011A4 (WriteCard) - 3700 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x100011E5 (a_hex) - 3687 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x100011FE (WriteReadAllSectorA) - 3682 ins, xor=23 bitop=57 imul=0 call=131
+
+  0x10012F3A (?) - 2638 ins, xor=44 bitop=45 imul=16 call=202
+
+  0x10012F40 (?) - 2637 ins, xor=44 bitop=45 imul=16 call=202
+
+  0x10012F46 (?) - 2636 ins, xor=44 bitop=45 imul=16 call=202
+
+  0x10012F70 (?) - 2640 ins, xor=44 bitop=45 imul=16 call=203
+
+  0x10013140 (?) - 2649 ins, xor=42 bitop=36 imul=16 call=210
+
+  0x10013190 (?) - 2606 ins, xor=42 bitop=36 imul=16 call=208
+
+======================================================================
+【.rdata 搜索加密相关字符串】
+======================================================================
+  BuildingCard
+  BuildingCard255
+  BuildingCardAnySector
+  CardErase
+  CardEraseAnySector
+  CheckOutCard
+  CheckOutCardAnySector
+  CloseCard
+  CloseCardAnySector
+  EmergencyCard
+  EmergencyCardAnySector
+  FloorCard
+  FloorCard255
+  FloorCardAnySector
+  GetCardTypeByCardDataStr
+  GetGuestETimeByCardDataStr
+  GetGuestLockNoByCardDataStr
+  GetGuestSTimeByCardDataStr
+  GroupCard
+  GroupCardAnySector
+  GroupSetCard
+  GroupSetCardAnySector
+  GuestCard
+  GuestCard1
+  GuestCard2
+  GuestCard255
+  GuestCardAnySector
+  IniCard
+  IniCard1
+  IniCard2
+  IniCard255
+  InitCardAnySector
+  LimitCard
+  LimitCardAnySector
+  LockCard
+  MasterCard
+  MasterCardAnySector
+  ReadCard
+  ReadCardE5
+  ReadCardID_T5557
